@@ -30,6 +30,20 @@ public class View extends GraphicsProgram {
 	private Model model;
 	private Controller contrl;
 	private Timer timer;
+	
+	private GRect obstacle0;
+	private GRect obstacle1;
+	private GRect obstacle2;
+
+	private int y0;
+	private int y1;
+	private int y2;
+
+	private boolean o0;
+	private boolean o1;
+	private boolean o2;
+
+	private int i;
 
 	/*
 	 * constructor
@@ -57,6 +71,7 @@ public class View extends GraphicsProgram {
 	 * contains the loop that refreshes the canvas at given interval
 	 */
 	public void run() {
+		i = 0;
 		while (true) {
 			this.update();
 			this.contrl.updateModel(System.currentTimeMillis());
@@ -90,6 +105,9 @@ public class View extends GraphicsProgram {
 	 * model and constructs the view out of that
 	 */
 	public void update() {
+		
+		i++;
+		
 		this.removeAll();
 		// adds the player rectangle to the view
 
