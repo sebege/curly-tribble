@@ -60,6 +60,18 @@ public class Model<E> {
 	
 	// Color constants
 	public static final Color BACKGROUND_COLOR = Color.GRAY;
+	
+	//Obastacle variables
+	public static final int OBSTACLE_HEIGHT = 150;
+	public static final int OBSTACLE_WIDTH = 50;
+	public static final int OBSTACLE_START_X = 1400;
+	public static final int OBSTACLE_START_Y_ABOVE = 300;
+	public static final int OBSTACLE_START_Y_BELOW = 450;
+
+	static RandomGenerator rgen = new RandomGenerator();
+	int random;
+	
+	int i = 0;
 
 	/*
 	 * class variables
@@ -72,6 +84,7 @@ public class Model<E> {
 	private Hero hero;
 	private Background background;
 	private Ground ground;
+	private obstacles;
 
 	/*
 	 * constructor
@@ -88,7 +101,19 @@ public class Model<E> {
 		this.hero = new Hero(HERO_START_X, HERO_START_Y, HERO_WIDTH, HERO_HEIGHT, Color.YELLOW);
 		this.background = new Background(BACKGROUND_COLOR);
 		this.ground = new Ground(GROUND_Y, GROUND_HEIGHT, Color.GREEN);
+		this.obstacle = new Obstacle(OBSTACLE_START_X,obstacleState(), OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
 		
+	}
+	
+	public int obstacleState() {
+		random = rgen.nextInt(1, 2);
+		if(i == 1) {
+			i= random;
+			return OBSTACLE_START_Y_ABOVE;
+		}else{
+			i= random;
+			return OBSTACLE_START_Y_BELOW;
+		}
 	}
 
 	/*
@@ -113,5 +138,8 @@ public class Model<E> {
 	public long getOldTime() {
 		return oldTime;
 	}
-
+	
+	public Obstacle getObstacle() {
+		return obstacle;
+	}	
 }
