@@ -1,68 +1,24 @@
 package projektoo;
 
-import java.awt.Color;
-
 /**
- * so viele unserer figuren sind schlicht rectangles, die gemeinsamkeiten haben.
- * lass uns einer superklasse dafür erstellen! yay \o/
- * 
- * @author bsg
+ * An Rectangle is a geometric Object, that has extension in x and y direction,
+ * width and height by name.
  *
  */
-public class Rectangle {
-	/*
-	 * instance variables
-	 */
-	protected int x;
-	protected int y;
-	protected int height;
+public class Rectangle extends GeoObject {
+
 	protected int width;
-	protected Color color;
-	
-	/*
-	 * constructor
-	 */
-	
-	public Rectangle(int x, int y, int width, int height) {
-		this.x = x;
-		this.y = y;
+	protected int height;
+
+	public Rectangle(int x, int y, int width, int height, int vx, int vy, Physics physics, boolean isOnGround) {
+		super(x, y, vx, vy, physics, isOnGround);
 		this.width = width;
 		this.height = height;
 	}
 
-	
-	/*
-	 * getters and setters
-	 */
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
-	public void setHeight(int height) {
+	public Rectangle(int x, int y, int width, int height, Physics physics, boolean isOnGround) {
+		super(x, y, physics, isOnGround);
+		this.width = width;
 		this.height = height;
 	}
 
@@ -73,5 +29,15 @@ public class Rectangle {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	
+	
 
 }
