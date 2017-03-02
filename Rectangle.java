@@ -10,14 +10,8 @@ public class Rectangle extends GeoObject {
 	protected int width;
 	protected int height;
 
-	public Rectangle(int x, int y, int width, int height, int vx, int vy, Physics physics, boolean isOnGround) {
-		super(x, y, vx, vy, physics, isOnGround);
-		this.width = width;
-		this.height = height;
-	}
-
-	public Rectangle(int x, int y, int width, int height, Physics physics, boolean isOnGround) {
-		super(x, y, physics, isOnGround);
+	public Rectangle(int x, int y, int width, int height, int vx, int vy, int ax, int ay, Physics physics, boolean isOnGround) {
+		super(x, y, vx, vy, ax, ay, physics, isOnGround);
 		this.width = width;
 		this.height = height;
 	}
@@ -26,18 +20,7 @@ public class Rectangle extends GeoObject {
 		return width;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
 	public int getHeight() {
 		return height;
 	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-	
-	
-
 }
