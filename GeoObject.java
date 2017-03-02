@@ -10,8 +10,16 @@ package projektoo;
  * too. Several constructors should be delivered. In our world everything is an
  * integer as long as it can be, because computing is more easy with integers.
  */
+/*
+ * das abschalten und anschalten von gravitation sollte besser so geregelt
+ * werden, dass der controller checkt, in richtung der gravitation ein
+ * gegenstand halt bietet und dann und wenn er als nicht am boden zählt (also
+ * insgesamt getriggert wurde) die gravitation neutralisiert und im umgekehrten
+ * fall draufzieht. dazu braucht man natürlich eine methode, die sowas
+ * überprüfen kann und die gehört auf die controller ebene.
+ */
 public class GeoObject {
-	
+
 	protected int x;
 	protected int y;
 	protected int vx;
@@ -36,20 +44,31 @@ public class GeoObject {
 
 	public void jump(int vy0) {
 		this.vy = vy0;
-		isOnGround = false;
+		if (isOnGround) {
+			triggerGravitation();
+		}
+	}
+
+	public void triggerGravitation() {
+		if (isOnGround) {
+			ay = ay + physics.getGravitation();
+		} else {
+			ay = ay - physics.getGravitation();
+		}
+		isOnGround = !isOnGround;
 	}
 
 	public void isHittingGround() {
 		if (this.y <= 100 && !isOnGround) {
 			vy = 0;
 			y = 100;
-			ay = ayg - physics.getGravitation();
-			isOnGround = true;
+			triggerGravitation();
 		}
 	}
 
 	public void updatePlace(int deltaT) {
-		// since shift right 10 is almost like division by 1000, this makes pixel out of millipixel
+		// since shift right 10 is almost like division by 1000, this makes
+		// pixel out of millipixel
 		x += (physics.zeitWegGesetz(ax, vx, deltaT)) >> 10;
 		y += (physics.zeitWegGesetz(ay, vy, deltaT)) >> 10;
 	}
@@ -60,9 +79,8 @@ public class GeoObject {
 	}
 
 	public void updateAcceleration() {
-		if (!isOnGround && y > 100) {
-			ay = ayg;
-			isOnGround = false;
+		if (isOnGround && y > 100) {
+			triggerGravitation();
 		}
 	}
 

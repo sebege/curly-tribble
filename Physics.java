@@ -9,7 +9,7 @@ public class Physics {
 	}
 
 	public int zeitWegGesetz(int a, int v, int t) {
-		int s = v * t + (a / 2 * t * t);
+		int s = v * t + ((a * t * t) >> 1);
 		return s;
 	}
 

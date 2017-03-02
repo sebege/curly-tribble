@@ -10,13 +10,10 @@ public class View extends GraphicsProgram {
 
 	private Controller controller;
 	private Model model;
-	private Timer timer;
 
 	public View() {
-		model = new Model();
-		controller = new Controller(model);
-		timer = new Timer(Model.INTERVALL);
-		timer.reset();
+		this.model = new Model();
+		this.controller = new Controller(model, this);
 	}
 
 	public void init() {
@@ -26,11 +23,9 @@ public class View extends GraphicsProgram {
 
 	public void run() {
 
-		while (true) {
-			controller.updateModel(System.currentTimeMillis());
-			updateView();
-			timer.pause();
-		}
+		Thread ctrlThread = new Thread(controller);
+		ctrlThread.start();
+
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -45,7 +40,7 @@ public class View extends GraphicsProgram {
 		background.setColor(Color.RED);
 		background.setFilled(true);
 		add(background);
-		GRect ground = new GRect(0, 600, 1400, 10);
+		GRect ground = new GRect(0, 600, 1400, 90);
 		ground.setColor(Color.WHITE);
 		ground.setFilled(true);
 		add(ground);
