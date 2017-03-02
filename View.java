@@ -37,7 +37,7 @@ public class View extends GraphicsProgram {
 	public void updateView() {
 		removeAll();
 		GRect background = new GRect(0, 0, 1400, 700);
-		background.setColor(Color.RED);
+		background.setColor(Color.BLUE);
 		background.setFilled(true);
 		add(background);
 		GRect ground = new GRect(0, (Model.RES_Y - Model.GNDY), 1400, 90);

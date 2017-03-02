@@ -90,24 +90,24 @@ public class GeoObject {
 	public void triggerGravitation() {
 		if (!isInAir) {
 			ay = ay + physics.getGravitation();
+			isInAir = true;
 		} else {
 			ay = ay - physics.getGravitation();
+			isInAir = false;
 		}
-		isInAir = !isInAir;
 	}
 
 	/**
 	 * this method would better be implemented on the level of the Model. this
 	 * is only provisorisch
 	 */
-	 private void isHittingGround() {
-	 if (this.y <= 100 && isInAir) {
-	 vy = 0;
-	 y = 100;
-	 triggerGravitation();
-	 this.isInAir = false;
-	 }
-	 }
+	private void isHittingGround() {
+		if (this.y <= 100 && isInAir) {
+			vy = 0;
+			y = 100;
+			triggerGravitation();
+		}
+	}
 
 	/**
 	 * computes the new place and updates the old
@@ -139,9 +139,9 @@ public class GeoObject {
 	private void updateAcceleration(int deltaT) {
 		// // what this conditional does would better be implemented on the
 		// level of the model
-		 if (!isInAir && y > 100) {
-		 triggerGravitation();
-		 }
+		if (!isInAir && y > 100) {
+			triggerGravitation();
+		}
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class GeoObject {
 		updatePlace(deltaT);
 		updateVelocity(deltaT);
 		updateAcceleration(deltaT);
-		 isHittingGround();
+		isHittingGround();
 	}
 
 	public int getX() {
