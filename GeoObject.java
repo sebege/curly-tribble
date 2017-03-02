@@ -20,18 +20,41 @@ package projektoo;
  */
 public class GeoObject {
 
+	// place
 	protected int x;
 	protected int y;
+	// velocity
 	protected int vx;
 	protected int vy;
+	// acceleration
 	protected int ax;
 	protected int ay;
-	protected int ayg;
+	// the physics
 	protected Physics physics;
-	protected boolean isOnGround;
+	// whether a ground offers resistance to gravity
+	protected boolean isInAir;
 
-	public GeoObject(int x, int y, int vx, int vy, int ax, int ay, Physics physics, boolean isOnGround) {
-		this.isOnGround = isOnGround;
+	/**
+	 * constructor with many parameters. adding emptier constructors somehow
+	 * caused weird bugs, so i removed them
+	 * 
+	 * @param x
+	 *            horizontal coordinate
+	 * @param y
+	 *            vertical coordinate
+	 * @param vx
+	 *            horizontal velocity
+	 * @param vy
+	 *            vertical velocity
+	 * @param ax
+	 *            horizontal acceleration
+	 * @param ay
+	 *            vertical acceleration
+	 * @param physics
+	 * @param isInAir
+	 */
+	public GeoObject(int x, int y, int vx, int vy, int ax, int ay, Physics physics, boolean isInAir) {
+		this.isInAir = isInAir;
 		this.x = x;
 		this.y = y;
 		this.vx = vx;
@@ -39,56 +62,98 @@ public class GeoObject {
 		this.ax = ax;
 		this.ay = ay;
 		this.physics = physics;
-		this.ayg = physics.getGravitation() + this.ay;
 	}
 
+	/**
+	 * makes the object jump in y-direction with the velocity @code vy0
+	 * 
+	 * @param vy0
+	 *            the new vertical velocity caused by the jump
+	 */
 	public void jump(int vy0) {
+		// sets y velocity to the jump speed
 		this.vy = vy0;
-		if (isOnGround) {
+		// if jumping while in air, gravity isn't triggered
+		if (!isInAir) {
 			triggerGravitation();
 		}
 	}
 
+	/*
+	 * below you'll see the methods responsible for updating properties
+	 */
+
+	/**
+	 * implements newtons actio = reactio for gravity. if there is ground under
+	 * feet, gravity gets neutralized, if not it'll come into effect.
+	 */
 	public void triggerGravitation() {
-		if (isOnGround) {
+		if (!isInAir) {
 			ay = ay + physics.getGravitation();
 		} else {
 			ay = ay - physics.getGravitation();
 		}
-		isOnGround = !isOnGround;
+		isInAir = !isInAir;
 	}
 
-	public void isHittingGround() {
-		if (this.y <= 100 && !isOnGround) {
-			vy = 0;
-			y = 100;
-			triggerGravitation();
-		}
-	}
+	/**
+	 * this method would better be implemented on the level of the Model. this
+	 * is only provisorisch
+	 */
+	 private void isHittingGround() {
+	 if (this.y <= 100 && isInAir) {
+	 vy = 0;
+	 y = 100;
+	 triggerGravitation();
+	 this.isInAir = false;
+	 }
+	 }
 
-	public void updatePlace(int deltaT) {
+	/**
+	 * computes the new place and updates the old
+	 * 
+	 * @param deltaT
+	 *            vergangene zeit
+	 */
+	private void updatePlace(int deltaT) {
 		// since shift right 10 is almost like division by 1000, this makes
 		// pixel out of millipixel
 		x += (physics.zeitWegGesetz(ax, vx, deltaT)) >> 10;
 		y += (physics.zeitWegGesetz(ay, vy, deltaT)) >> 10;
 	}
 
-	public void updateVelocity(int deltaT) {
+	/**
+	 * computes the new velocity and updates the old
+	 * 
+	 * @param deltaT
+	 *            vergangene Zeit
+	 */
+	private void updateVelocity(int deltaT) {
 		vx += (physics.zeitGeschwindigkeitGesetz(ax, deltaT));
 		vy += (physics.zeitGeschwindigkeitGesetz(ay, deltaT));
 	}
 
-	public void updateAcceleration() {
-		if (isOnGround && y > 100) {
-			triggerGravitation();
-		}
+	/**
+	 * computes the new acceleration and update the old
+	 */
+	private void updateAcceleration(int deltaT) {
+		// // what this conditional does would better be implemented on the
+		// level of the model
+		 if (!isInAir && y > 100) {
+		 triggerGravitation();
+		 }
 	}
 
+	/**
+	 * collects the individual update methods for the properties into ones
+	 * 
+	 * @param deltaT
+	 */
 	public void updateObject(int deltaT) {
 		updatePlace(deltaT);
 		updateVelocity(deltaT);
-		updateAcceleration();
-		isHittingGround();
+		updateAcceleration(deltaT);
+		 isHittingGround();
 	}
 
 	public int getX() {
@@ -115,15 +180,12 @@ public class GeoObject {
 		return ay;
 	}
 
-	public int getAyg() {
-		return ayg;
-	}
-
 	public Physics getPhysics() {
 		return physics;
 	}
 
-	public boolean isOnGround() {
-		return isOnGround;
+	public boolean isInAir() {
+		return isInAir;
 	}
+
 }

@@ -40,12 +40,12 @@ public class View extends GraphicsProgram {
 		background.setColor(Color.RED);
 		background.setFilled(true);
 		add(background);
-		GRect ground = new GRect(0, 600, 1400, 90);
+		GRect ground = new GRect(0, (Model.RES_Y - Model.GNDY), 1400, 90);
 		ground.setColor(Color.WHITE);
 		ground.setFilled(true);
 		add(ground);
 		GRect player = makeGRect(model.getPlayer());
-		player.setColor(Color.YELLOW);
+		player.setColor(model.getPlayer().getColor());
 		player.setFilled(true);
 		add(player);
 	}

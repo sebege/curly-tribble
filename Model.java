@@ -1,5 +1,8 @@
 package projektoo;
 
+import java.awt.Color;
+import java.util.List;
+
 public class Model {
 	
 	// Resolution
@@ -18,7 +21,7 @@ public class Model {
 	public static final int JV0 = 2000;
 	// gravitation in (approximately) millipixel per square millisecond
 	public static final int GRAV = -4;
-	public static final int GNDX = 100;
+	public static final int GNDY = 100;
 	
 	private Physics physics;
 	private Rectangle player;
@@ -26,18 +29,22 @@ public class Model {
 
 	public Model() {
 		this.physics = new Physics(GRAV);
-		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, true);
+		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, false, Color.YELLOW);
 		this.lastTime = System.currentTimeMillis();
 	}
 	
-	public void updateModel(long thisTime) {
-		int deltaT = (int) (thisTime - lastTime);
-		player.updateObject(deltaT);
-		lastTime = thisTime;
-	}
+//	public void updateModel(long thisTime) {
+//		int deltaT = (int) (thisTime - lastTime);
+//		player.updateObject(deltaT);
+//		lastTime = thisTime;
+//	}
 
 	public long getLastTime() {
 		return lastTime;
+	}
+
+	public void setLastTime(long lastTime) {
+		this.lastTime = lastTime;
 	}
 
 	public Rectangle getPlayer() {
