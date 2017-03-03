@@ -22,25 +22,33 @@ public class Model {
 	// that's because gravitation dragged him down before you saw the canvas
 	public static final int PLY = 100;
 	// player extension
-	public static final int PLW = 100;
+	public static final int PLW = 50;
 	public static final int PLH = 150;
 	// jump start speed in (approximately) millipixel per millisecond
 	public static final int JV0 = 1500;
 	// gravitation in (approximately) millipixel per square millisecond
 	public static final int GRAV = -3;
+	// the duration of the duck move in milliseconds
+	public static final int DDUR = 1000;
+	// the ducking amount(?). how much the player shrings through ducking.
+	public static final int DDIS = 51;
 	// GND is the effective height of the ground
 	public static final int GNDY = 10;
 	public static final int GNDH = 90;	
 	public static final int GND = GNDY + GNDH;
 	// some properties for the generated obstacles
-	public static final int OBW = 50;
-	public static final int OBH = 100;
+	public static final int OBW = 100;
+	public static final int OBH = 250;
 	// Obstacle starting speed
 	public static final int OBV0 = -400;
 	// obstacle high spawn y
-	public static final int OBHY = 300;
+	public static final int OBHY = 200;
+	// obstavle high spawn height
+	public static final int OBHH = 250;
 	// obstacle low spawn y
 	public static final int OBLY = 100;
+	// obstacle low spawn height
+	public static final int OBLH = 200;
 	// obstacle color
 	public static final Color OBC = Color.BLACK;
 	// distance between obstacles
@@ -63,13 +71,13 @@ public class Model {
 
 	public Model() {
 		this.physics = new Physics(GRAV);
-		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW);
+		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW, DDIS);
 		this.lastTime = System.currentTimeMillis();
 		this.obstacleSpeed = OBV0;
 		this.rgen = new RandomGenerator();
-		this.obstacleList = new ObstacleList(1400, obstacleSpeed, OBW, OBH, physics);
-		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE);
-		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN);
+		this.obstacleList = new ObstacleList(1400, obstacleSpeed, OBW, physics);
+		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE, 0);
+		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN, 0);
 	}
 
 	public long getLastTime() {

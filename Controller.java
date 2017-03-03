@@ -18,8 +18,13 @@ public class Controller implements Runnable {
 		while (true) {
 			updateModel(System.currentTimeMillis());
 			view.updateView();
+			if(isGameOver(model.getPlayer(), model.getObstacleList())) {
+				timer.pause();
+				break;
+			}			
 			timer.pause();
 		}
+		view.gameOverView();
 	}
 
 	/*
@@ -30,6 +35,17 @@ public class Controller implements Runnable {
 		model.getPlayer().jump(Model.JV0);
 	}
 
+	/**
+	 * 
+	 * @param duckStart
+	 *            the time in milliseconds, the duck command was given
+	 */
+	public void duck(long duckStart) {
+		if (model.getPlayer().getIsDucked() < 0) {
+			model.getPlayer().duck(duckStart);
+		}
+	}
+
 	/*
 	 * Update Method
 	 */
@@ -37,11 +53,18 @@ public class Controller implements Runnable {
 	public void updateModel(long thisTime) {
 		int deltaT = (int) (thisTime - model.getLastTime());
 		model.getPlayer().updateObject(deltaT);
+		controlObstacleSpawn();
 		model.getObstacleList().updateAllObstacles(deltaT);
 		model.getObstacleList().removeOldObstacles();
-		controlObstacleSpawn();
+		unduckPlayer(thisTime);
 		hitGround(model.getPlayer());
 		model.setLastTime(thisTime);
+	}
+
+	public void unduckPlayer(long thisTime) {
+		if ((model.getPlayer().getIsDucked() > 0) && (thisTime - model.getPlayer().getIsDucked()) >= Model.DDUR) {
+			model.getPlayer().unduck();
+		}
 	}
 
 	/*
@@ -75,16 +98,16 @@ public class Controller implements Runnable {
 		int by2 = by1 + b.getHeight();
 
 		// liegt die x koordinate eines punktes von b in der x ausdehnung von a?
-		boolean condition1 = (ax1 <= bx1 && bx1 <= ax2) || (ax1 <= bx2 && bx2 <= ax2);
+		boolean condition1 = (ax1 < bx1 && bx1 < ax2) || (ax1 < bx2 && bx2 < ax2);
 		// und eine y koordinate von b in denen von a?
-		boolean condition2 = (ay1 <= by1 && by1 <= ax2) || (ay1 <= by2 && by2 <= ay2);
+		boolean condition2 = (ay1 < by1 && by1 < ay2) || (ay1 < by2 && by2 < ay2);
 		// falls beides der falls ist, so liegt ein punkt von b in der fläche
 		// von a
 
 		// liegt die x koordinate eines punktes von b in der x ausdehnung von a?
-		boolean condition3 = (bx1 <= ax1 && ax1 <= bx2) || (bx1 <= ax2 && ax2 <= bx2);
+		boolean condition3 = (bx1 < ax1 && ax1 < bx2) || (bx1 < ax2 && ax2 < bx2);
 		// und eine y koordinate von b in denen von a?
-		boolean condition4 = (by1 <= ay1 && ay1 <= bx2) || (by1 <= ay2 && ay2 <= by2);
+		boolean condition4 = (by1 < ay1 && ay1 < by2) || (by1 < ay2 && ay2 < by2);
 		// falls beides der falls ist, so liegt ein punkt von b in der fläche
 		// von a
 
@@ -92,6 +115,32 @@ public class Controller implements Runnable {
 			answer = true;
 		}
 
+		return answer;
+	}
+	
+	/**
+	 * takes the player and the obstacle list and determines, whether the player overlaps with an obstacle.
+	 * first searches the list for the oldest obstacle, that is not behind the player and then calls do overlap on them.
+	 * 
+	 * @param player
+	 * @param obstacleList
+	 * @return
+	 */
+	public boolean isGameOver(Rectangle player, ObstacleList obstacleList) {
+		boolean answer = false;
+		Rectangle theObstacle = null;
+		// the oldest obstacle has the index 0
+		int i = 0;
+		while(theObstacle == null) {
+			// if the right vertical border of the obstacle is on the right of the player, then a collision is still possible
+			// only the obstacles with the lowest indexes could have surpassed the player.
+			// and always only the first possible obstacle is woth checking
+			if(obstacleList.get(i).getX() + obstacleList.get(i).getX() > player.getX()) {
+				theObstacle = obstacleList.get(i);
+			}
+			i++;
+		}
+		answer = doOverlap(player, theObstacle);
 		return answer;
 	}
 
@@ -114,14 +163,20 @@ public class Controller implements Runnable {
 			a.setGravitationOn(true);
 		}
 	}
-	
+
 	/**
-	 * experimental method that shall control the spawning flow of new obstacles.
-	 * for now i'll make it static, later it should be randomized
+	 * experimental method that shall control the spawning flow of new
+	 * obstacles. for now i'll make it static, later it should be randomized
 	 */
 	private void controlObstacleSpawn() {
-		if(model.getObstacleList().getDistance() > Model.OBD) {
-			model.getObstacleList().addNewObstacle(Model.OBLY, Model.OBC);
+		if (model.getObstacleList().getDistance() > Model.OBD) {
+			// if the random generator says "1", the obstacle will spawn low, if
+			// it says "0" it'll spawn high
+			if (model.getRgen().nextInt(2) == 1) {
+				model.getObstacleList().addNewObstacle(Model.OBLY, Model.OBLH, Model.OBC);
+			} else {
+				model.getObstacleList().addNewObstacle(Model.OBHY, Model.OBHH, Model.OBC);
+			}
 		}
 	}
 

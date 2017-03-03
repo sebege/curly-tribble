@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import acm.graphics.GLabel;
 import acm.graphics.GRect;
 import acm.program.*;
 
@@ -33,11 +34,20 @@ public class View extends GraphicsProgram {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			controller.jump();
 		}
+	
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			controller.duck(System.currentTimeMillis());
+		}
 	}
 
 	public void updateView() {
 		removeAll();
 		addGRects();
+	}
+	
+	public void gameOverView() {
+		removeAll();
+		add(new GLabel("his existence was only brief, but he enjoyed it thoroughly."), 50, 200);
 	}
 
 	/**

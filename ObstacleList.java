@@ -15,14 +15,12 @@ public class ObstacleList extends ArrayList<Rectangle> {
 	private int spawnX;
 	private int spawnVx;
 	private int spawnWidth;
-	private int spawnHeight;
 	private Physics physics;
 
-	public ObstacleList(int spawnX, int spawnVx, int spawnWidth, int spawnHeight, Physics physics) {
+	public ObstacleList(int spawnX, int spawnVx, int spawnWidth, Physics physics) {
 		this.spawnX = spawnX;
 		this.spawnVx = spawnVx;
 		this.spawnWidth = spawnWidth;
-		this.spawnHeight = spawnHeight;
 		this.physics = physics;
 	}
 
@@ -36,7 +34,7 @@ public class ObstacleList extends ArrayList<Rectangle> {
 	 * @return
 	 */
 	public int getDistance() {
-		if (size() > 1) {
+		if (size() >= 1) {
 			return spawnX - (get(size() - 1).getX() + get(size() - 1).getWidth());
 		} else {
 			return spawnX;
@@ -50,8 +48,8 @@ public class ObstacleList extends ArrayList<Rectangle> {
 	 * @param y
 	 * @param color
 	 */
-	public void addNewObstacle(int y, Color color) {
-		add(new Rectangle(spawnX, y, spawnWidth, spawnHeight, spawnVx, 0, 0, 0, physics, color));
+	public void addNewObstacle(int y, int spawnHeight, Color color) {
+		add(new Rectangle(spawnX, y, spawnWidth, spawnHeight, spawnVx, 0, 0, 0, physics, color, 0));
 	}
 
 	/**
