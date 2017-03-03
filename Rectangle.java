@@ -13,6 +13,19 @@ public class Rectangle extends GeoObject {
 	protected int height;
 	protected Color color;
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param vx
+	 * @param vy
+	 * @param ax
+	 * @param ay
+	 * @param physics
+	 * @param color
+	 */
 	public Rectangle(int x, int y, int width, int height, int vx, int vy, int ax, int ay, Physics physics, Color color) {
 		super(x, y, vx, vy, ax, ay, physics);
 		this.width = width;

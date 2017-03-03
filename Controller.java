@@ -97,16 +97,17 @@ public class Controller implements Runnable {
 	// gravitation eine kollision passiert
 	// dazu muss der boden erstmal zu einem echten objekt werden
 	private void hitGround(GeoObject a) {
-		if (a.isGravitationOn() && a.getY() <= Model.GNDY) {
+		if (a.isGravitationOn() && a.getY() <= Model.GND) {
 			a.setVy(0);
-			a.setY(Model.GNDY);
+			a.setY(Model.GND);
 			a.setGravitationOn(false);
 		}
 	}
 
 	// setzt Gravitation in Kraft, wenn Objekt über dem Boden ist
+	// should not be used on obstacles, because the shall stay in the air, when they are set there
 	private void enforceGravitation(GeoObject a) {
-		if (a.getY() > Model.GNDY) {
+		if (a.getY() > Model.GND) {
 			a.setGravitationOn(true);
 		}
 	}
