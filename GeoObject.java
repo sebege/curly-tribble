@@ -32,7 +32,7 @@ public class GeoObject {
 	// the physics
 	protected Physics physics;
 	// whether a ground offers resistance to gravity
-	protected boolean isInAir;
+	protected boolean isGravitationOn;
 
 	/**
 	 * constructor with many parameters. adding emptier constructors somehow
@@ -53,8 +53,9 @@ public class GeoObject {
 	 * @param physics
 	 * @param isInAir
 	 */
-	public GeoObject(int x, int y, int vx, int vy, int ax, int ay, Physics physics, boolean isInAir) {
-		this.isInAir = isInAir;
+	public GeoObject(int x, int y, int vx, int vy, int ax, int ay, Physics physics) {
+		// set false by standard. if that's wrong, the controller will correct it on start
+		this.isGravitationOn = false;
 		this.x = x;
 		this.y = y;
 		this.vx = vx;
@@ -72,42 +73,16 @@ public class GeoObject {
 	 */
 	public void jump(int vy0) {
 		// sets y velocity to the jump speed
-		this.vy = vy0;
-		// if jumping while in air, gravity isn't triggered
-		if (!isInAir) {
-			triggerGravitation();
-		}
+		setVy(vy0);
+		/*
+		 * dieser setter ist ein bisschen redu
+		 */
+		setGravitationOn(true);
 	}
 
 	/*
 	 * below you'll see the methods responsible for updating properties
 	 */
-
-	/**
-	 * implements newtons actio = reactio for gravity. if there is ground under
-	 * feet, gravity gets neutralized, if not it'll come into effect.
-	 */
-	public void triggerGravitation() {
-		if (!isInAir) {
-			ay = ay + physics.getGravitation();
-			isInAir = true;
-		} else {
-			ay = ay - physics.getGravitation();
-			isInAir = false;
-		}
-	}
-
-	/**
-	 * this method would better be implemented on the level of the Model. this
-	 * is only provisorisch
-	 */
-	private void isHittingGround() {
-		if (this.y <= 100 && isInAir) {
-			vy = 0;
-			y = 100;
-			triggerGravitation();
-		}
-	}
 
 	/**
 	 * computes the new place and updates the old
@@ -118,8 +93,8 @@ public class GeoObject {
 	private void updatePlace(int deltaT) {
 		// since shift right 10 is almost like division by 1000, this makes
 		// pixel out of millipixel
-		x += (physics.zeitWegGesetz(ax, vx, deltaT)) >> 10;
-		y += (physics.zeitWegGesetz(ay, vy, deltaT)) >> 10;
+		x += (physics.zeitWegGesetz(getAx(), getVx(), deltaT)) >> 10;
+		y += (physics.zeitWegGesetz(getAy(), getVy(), deltaT)) >> 10;
 	}
 
 	/**
@@ -129,19 +104,15 @@ public class GeoObject {
 	 *            vergangene Zeit
 	 */
 	private void updateVelocity(int deltaT) {
-		vx += (physics.zeitGeschwindigkeitGesetz(ax, deltaT));
-		vy += (physics.zeitGeschwindigkeitGesetz(ay, deltaT));
+		vx += (physics.zeitGeschwindigkeitGesetz(getAx(), deltaT));
+		vy += (physics.zeitGeschwindigkeitGesetz(getAy(), deltaT));
 	}
 
 	/**
 	 * computes the new acceleration and update the old
 	 */
 	private void updateAcceleration(int deltaT) {
-		// // what this conditional does would better be implemented on the
-		// level of the model
-		if (!isInAir && y > 100) {
-			triggerGravitation();
-		}
+		
 	}
 
 	/**
@@ -153,39 +124,73 @@ public class GeoObject {
 		updatePlace(deltaT);
 		updateVelocity(deltaT);
 		updateAcceleration(deltaT);
-		isHittingGround();
+	}
+
+	public int getAy() {
+		if (isGravitationOn) {
+			return ay + physics.getGravitation();
+		} else {
+			return ay;
+		}
 	}
 
 	public int getX() {
 		return x;
 	}
 
+	public void setX(int x) {
+		this.x = x;
+	}
+
 	public int getY() {
 		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 
 	public int getVx() {
 		return vx;
 	}
 
+	public void setVx(int vx) {
+		this.vx = vx;
+	}
+
 	public int getVy() {
 		return vy;
+	}
+
+	public void setVy(int vy) {
+		this.vy = vy;
 	}
 
 	public int getAx() {
 		return ax;
 	}
 
-	public int getAy() {
-		return ay;
+	public void setAx(int ax) {
+		this.ax = ax;
 	}
 
 	public Physics getPhysics() {
 		return physics;
 	}
 
-	public boolean isInAir() {
-		return isInAir;
+	public void setPhysics(Physics physics) {
+		this.physics = physics;
 	}
 
+	public boolean isGravitationOn() {
+		return isGravitationOn;
+	}
+
+	public void setGravitationOn(boolean isGravitationOn) {
+		this.isGravitationOn = isGravitationOn;
+	}
+
+	public void setAy(int ay) {
+		this.ay = ay;
+	}
 }

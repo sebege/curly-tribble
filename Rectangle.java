@@ -13,8 +13,8 @@ public class Rectangle extends GeoObject {
 	protected int height;
 	protected Color color;
 
-	public Rectangle(int x, int y, int width, int height, int vx, int vy, int ax, int ay, Physics physics, boolean isOnGround, Color color) {
-		super(x, y, vx, vy, ax, ay, physics, isOnGround);
+	public Rectangle(int x, int y, int width, int height, int vx, int vy, int ax, int ay, Physics physics, Color color) {
+		super(x, y, vx, vy, ax, ay, physics);
 		this.width = width;
 		this.height = height;
 		this.color = color;
