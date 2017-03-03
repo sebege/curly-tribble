@@ -1,1 +1,1 @@
-# the programming project of the first years programming course of our university
+# some sidescroller and our first programming project
