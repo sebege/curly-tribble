@@ -25,10 +25,8 @@ public class View extends GraphicsProgram {
 	}
 
 	public void run() {
-
 		Thread ctrlThread = new Thread(controller);
 		ctrlThread.start();
-
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -39,49 +37,35 @@ public class View extends GraphicsProgram {
 
 	public void updateView() {
 		removeAll();
-//		GRect background = new GRect(0, 0, 1400, 700);
-//		background.setColor(Color.BLUE);
-//		background.setFilled(true);
-//		add(background);
-//		GRect ground = new GRect(0, (Model.RES_Y - Model.GND), 1400, 90);
-//		ground.setColor(Color.WHITE);
-//		ground.setFilled(true);
-//		add(ground);
-		buildGRectList();
-		for(int i=0; i < gRectList.size(); i++) {
-			add(gRectList.get(i));
-		}
-	}
-	
-	/**
-	 * takes information out of the model to build a list with all the GRects to
-	 * put onto the canvas.
-	 */
-	public void buildGRectList() {
-		gRectList.clear();
-		gRectList.add(makeGRect(model.getBackground()));
-		gRectList.add(makeGRect(model.getGround()));
-		for (int i = 0; i < model.getObstacleList().size(); i++) {
-			gRectList.add(makeGRect(model.getObstacleList().get(i)));
-		}		
-		gRectList.add(makeGRect(model.getPlayer()));
+		addGRects();
 	}
 
 	/**
-	 * takes a rectangle and return a GRect built out of the rectangle
+	 * calls addGrect on every Rectangle that is to be put onto the canvas
+	 */
+	public void addGRects() {
+		addGRect(model.getBackground());
+		addGRect(model.getGround());
+		for (int i = 0; i < model.getObstacleList().size(); i++) {
+			addGRect(model.getObstacleList().get(i));
+		}
+		addGRect(model.getPlayer());
+	}
+
+	/**
+	 * takes a rectangle and adds a GRect built out of the rectangle to the
+	 * canvas
 	 * 
 	 * @param rec
 	 * @return
 	 */
-	public GRect makeGRect(Rectangle rec) {
+	public void addGRect(Rectangle rec) {
 		GRect grect = new GRect(rec.getX(), Model.RES_Y - rec.getY() - rec.getHeight(), rec.getWidth(),
 				rec.getHeight());
 		if (rec.getColor() != null) {
 			grect.setColor(rec.getColor());
 			grect.setFilled(true);
 		}
-		return grect;
+		add(grect);
 	}
-
-
 }
