@@ -16,7 +16,6 @@ public class Controller implements Runnable {
 	public void run() {
 		enforceGravitation(model.getPlayer());
 		while (true) {
-			System.out.println(model.getPlayer().getY());
 			updateModel(System.currentTimeMillis());
 			view.updateView();
 			timer.pause();
@@ -38,6 +37,9 @@ public class Controller implements Runnable {
 	public void updateModel(long thisTime) {
 		int deltaT = (int) (thisTime - model.getLastTime());
 		model.getPlayer().updateObject(deltaT);
+		model.getObstacleList().updateAllObstacles(deltaT);
+		model.getObstacleList().removeOldObstacles();
+		controlObstacleSpawn();
 		hitGround(model.getPlayer());
 		model.setLastTime(thisTime);
 	}
@@ -105,10 +107,21 @@ public class Controller implements Runnable {
 	}
 
 	// setzt Gravitation in Kraft, wenn Objekt über dem Boden ist
-	// should not be used on obstacles, because the shall stay in the air, when they are set there
+	// should not be used on obstacles, because the shall stay in the air, when
+	// they are set there
 	private void enforceGravitation(GeoObject a) {
 		if (a.getY() > Model.GND) {
 			a.setGravitationOn(true);
+		}
+	}
+	
+	/**
+	 * experimental method that shall control the spawning flow of new obstacles.
+	 * for now i'll make it static, later it should be randomized
+	 */
+	private void controlObstacleSpawn() {
+		if(model.getObstacleList().getDistance() > Model.OBD) {
+			model.getObstacleList().addNewObstacle(Model.OBLY, Model.OBC);
 		}
 	}
 

@@ -17,26 +17,34 @@ public class Model {
 	// INTERVALL and low velocities
 	public static final double INTERVALL = 16;
 	// player start coordinates
-	public static final int PLX = 150;
+	public static final int PLX = 200;
 	// if you set this PLY value high, but the player doesn't appear high:
 	// that's because gravitation dragged him down before you saw the canvas
 	public static final int PLY = 100;
 	// player extension
 	public static final int PLW = 100;
-	public static final int PLH = 100;
+	public static final int PLH = 150;
 	// jump start speed in (approximately) millipixel per millisecond
-	public static final int JV0 = 3000;
+	public static final int JV0 = 1500;
 	// gravitation in (approximately) millipixel per square millisecond
-	public static final int GRAV = -10;
+	public static final int GRAV = -3;
 	// GND is the effective height of the ground
 	public static final int GNDY = 10;
 	public static final int GNDH = 90;	
 	public static final int GND = GNDY + GNDH;
 	// some properties for the generated obstacles
 	public static final int OBW = 50;
-	public static final int OBH = 50;
+	public static final int OBH = 100;
 	// Obstacle starting speed
-	public static final int OBV0 = 100;
+	public static final int OBV0 = -400;
+	// obstacle high spawn y
+	public static final int OBHY = 300;
+	// obstacle low spawn y
+	public static final int OBLY = 100;
+	// obstacle color
+	public static final Color OBC = Color.BLACK;
+	// distance between obstacles
+	public static final int OBD = 500;
 
 	private RandomGenerator rgen;
 	private Physics physics;

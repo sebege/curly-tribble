@@ -28,13 +28,19 @@ public class ObstacleList extends ArrayList<Rectangle> {
 
 	/**
 	 * returns the distance between a hypothetical freshly spawned obstacle and
-	 * the obstacle newest obstacle in the list
+	 * the obstacle newest obstacle in the list. if the list is empty, it
+	 * returns the X Resolution for that there is no obstacle at the whole
+	 * distance of the screen.
 	 * 
 	 * @param i
 	 * @return
 	 */
 	public int getDistance() {
-		return spawnX - (get(size() - 1).getX() + get(size() - 1).getWidth());
+		if (size() > 1) {
+			return spawnX - (get(size() - 1).getX() + get(size() - 1).getWidth());
+		} else {
+			return spawnX;
+		}
 	}
 
 	/**
@@ -71,6 +77,17 @@ public class ObstacleList extends ArrayList<Rectangle> {
 		spawnVx = vx;
 		for (int i = 0; i < size(); i++) {
 			get(i).setVx(vx);
+		}
+	}
+
+	/**
+	 * calls the updateObject Method on every obstacle in the list
+	 * 
+	 * @param deltaT
+	 */
+	public void updateAllObstacles(int deltaT) {
+		for (int i = 0; i < size(); i++) {
+			get(i).updateObject(deltaT);
 		}
 	}
 

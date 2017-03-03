@@ -61,10 +61,10 @@ public class View extends GraphicsProgram {
 		gRectList.clear();
 		gRectList.add(makeGRect(model.getBackground()));
 		gRectList.add(makeGRect(model.getGround()));
-		gRectList.add(makeGRect(model.getPlayer()));
 		for (int i = 0; i < model.getObstacleList().size(); i++) {
 			gRectList.add(makeGRect(model.getObstacleList().get(i)));
-		}
+		}		
+		gRectList.add(makeGRect(model.getPlayer()));
 	}
 
 	/**
