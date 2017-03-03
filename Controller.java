@@ -1,77 +1,115 @@
 package projektoo;
 
-/**
- * Kurz werden hier solche Methoden definiert, die das Model manipulieren.
- * 
- * Es wird unterschieden zwischen hardware input und ingame commands. Im View
- * wird definiert, welches Input welchem Kommando entsprechen soll. Der
- * Controller ist dann sozusagen die Kommandozentrale, in der implementiert ist,
- * wie ein gegebenes Kommando umgesetzt wird. Das soll den Vorteil haben, dass
- * gegebenenfalls beim Erstellen einer neuen View wieder lediglich Eingabetasten
- * mit Kommandos belegt werden müssen, und nicht nochmal in den Tiefen und
- * Verwinklungen des Programms herumgetaucht werden muss, um die richtige
- * Befehlsfolge wiederzufinden, was eine Fehlerquelle wäre. Dies muss
- * stattdessen lediglich ein Mal im Controller getan werden.
- * 
- * Wie es praktisch ist, darf hier Zeugs in andere Klassen ausgelagert werden.
- * Naheliegend zum Beispiel solche Methoden, die Instanzen der eigenen Klasse
- * betreffen. Dort verwischt sich dann die Grenze zwischen Controller und Model,
- * da die Instanzen einer solchen Klasse teil des Models sind, aber gleichzeitig
- * Methoden beinhalten, die das Modell variieren.
- * 
- * @author bsg
- *
- */
-public class Controller {
+public class Controller implements Runnable {
 
-	/*
-	 * instance variables
-	 */
-	// ein Controller muss wisse, welches konrekte Modell er manipulieren soll,
-	// darum braucht er hier eine solche Variable
 	private Model model;
+	private View view;
+	private Timer timer;
 
-	/*
-	 * contructor
-	 */
-	public Controller(Model model) {
+	public Controller(Model model, View view) {
 		this.model = model;
+		this.view = view;
+		this.timer = new Timer(Model.INTERVALL);
+		timer.reset();
+	}
+
+	public void run() {
+		enforceGravitation(model.getPlayer());
+		while (true) {
+			System.out.println(model.getPlayer().getY());
+			updateModel(System.currentTimeMillis());
+			view.updateView();
+			timer.pause();
+		}
 	}
 
 	/*
-	 * methods
+	 * Command methods
 	 */
 
-	/**
-	 * diese methode implementiert veränderung über zeit im modell. idealerweise
-	 * ruft sie eine untermethode für das spezielle objekt, das aktualisiert
-	 * werden soll, sodass wir das ganze modular halten.
-	 * 
-	 * @param newTime
-	 */
-	public void updateModel(long newTime) {
-		this.model.getHero().updateHero(newTime);
-
-		// am ende wird der bezugspunkt des zeitpunktes an dem das letzte mal
-		// geupdatet wurde geupdated
-		this.model.setOldTime(newTime);
-	}
-
-	/**
-	 * diese Methode beschreibt, wie das "jump"-Kommando ausgeführt werden soll
-	 */
 	public void jump() {
-		System.out.println("jump()");
-		this.model.getHero().triggerJump();
+		model.getPlayer().jump(Model.JV0);
 	}
 
-	public void duck() {
-		System.out.println("duck()");
-		this.model.getHero().duck();
+	/*
+	 * Update Method
+	 */
+
+	public void updateModel(long thisTime) {
+		int deltaT = (int) (thisTime - model.getLastTime());
+		model.getPlayer().updateObject(deltaT);
+		hitGround(model.getPlayer());
+		model.setLastTime(thisTime);
 	}
-	
-	public void unduck() {
-		System.out.println("unduck()");
-		this.model.getHero().unduck();
+
+	/*
+	 * Control Methods
+	 */
+	/**
+	 * takes two rectangles as arguments and then computes, whether they overlap
+	 * or not
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private boolean doOverlap(Rectangle a, Rectangle b) {
+		boolean answer = false;
+		/*
+		 * this method checks, whether one point of one rectangle lies inside
+		 * the other rectangle or other way round
+		 */
+
+		// the 4 different coordinates of the 8 coordinates of the 4 points of a
+		int ax1 = a.getX();
+		int ax2 = ax1 + a.getWidth();
+		int ay1 = a.getY();
+		int ay2 = ay1 + a.getHeight();
+
+		// the 4 different coordinates of the 8 coordinates of the 4 points of b
+		int bx1 = b.getX();
+		int bx2 = bx1 + b.getWidth();
+		int by1 = b.getY();
+		int by2 = by1 + b.getHeight();
+
+		// liegt die x koordinate eines punktes von b in der x ausdehnung von a?
+		boolean condition1 = (ax1 <= bx1 && bx1 <= ax2) || (ax1 <= bx2 && bx2 <= ax2);
+		// und eine y koordinate von b in denen von a?
+		boolean condition2 = (ay1 <= by1 && by1 <= ax2) || (ay1 <= by2 && by2 <= ay2);
+		// falls beides der falls ist, so liegt ein punkt von b in der fläche
+		// von a
+
+		// liegt die x koordinate eines punktes von b in der x ausdehnung von a?
+		boolean condition3 = (bx1 <= ax1 && ax1 <= bx2) || (bx1 <= ax2 && ax2 <= bx2);
+		// und eine y koordinate von b in denen von a?
+		boolean condition4 = (by1 <= ay1 && ay1 <= bx2) || (by1 <= ay2 && ay2 <= by2);
+		// falls beides der falls ist, so liegt ein punkt von b in der fläche
+		// von a
+
+		if ((condition1 && condition2) || (condition3 && condition4)) {
+			answer = true;
+		}
+
+		return answer;
 	}
+
+	// verbesserungsvorschlag: diese methode passiert dann, wenn in richtung der
+	// gravitation eine kollision passiert
+	// dazu muss der boden erstmal zu einem echten objekt werden
+	private void hitGround(GeoObject a) {
+		if (a.isGravitationOn() && a.getY() <= Model.GND) {
+			a.setVy(0);
+			a.setY(Model.GND);
+			a.setGravitationOn(false);
+		}
+	}
+
+	// setzt Gravitation in Kraft, wenn Objekt über dem Boden ist
+	// should not be used on obstacles, because the shall stay in the air, when they are set there
+	private void enforceGravitation(GeoObject a) {
+		if (a.getY() > Model.GND) {
+			a.setGravitationOn(true);
+		}
+	}
+
 }

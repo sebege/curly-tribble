@@ -1,145 +1,95 @@
 package projektoo;
 
 import java.awt.Color;
-import java.util.List;
+import java.util.ArrayList;
 
-/**
- * Im Model sammeln sich Konstanten und Objekte und ein paar Methoden. Ein paar
- * Konstanten müssen nicht unbedingt Konstanten bleiben.
- * 
- * @author bsg
- * @param <E>
- *
- */
-public class Model<E> {
+import acm.util.RandomGenerator;
 
+public class Model {
+
+	// Resolution
+	public static final int RES_X = 1400;
+	public static final int RES_Y = 700;
+	// Refresh Rate in milliseconds
+	// 1 because of integer precision the physics doesn't work properly with low
+	// 2 could be fixed by using double values and converting to int only when
+	// setting up the view
+	// INTERVALL and low velocities
+	public static final double INTERVALL = 16;
+	// player start coordinates
+	public static final int PLX = 150;
+	// if you set this PLY value high, but the player doesn't appear high:
+	// that's because gravitation dragged him down before you saw the canvas
+	public static final int PLY = 100;
+	// player extension
+	public static final int PLW = 100;
+	public static final int PLH = 100;
+	// jump start speed in (approximately) millipixel per millisecond
+	public static final int JV0 = 3000;
+	// gravitation in (approximately) millipixel per square millisecond
+	public static final int GRAV = -10;
+	// GND is the effective height of the ground
+	public static final int GNDY = 10;
+	public static final int GNDH = 90;	
+	public static final int GND = GNDY + GNDH;
+	// some properties for the generated obstacles
+	public static final int OBW = 50;
+	public static final int OBH = 50;
+	// Obstacle starting speed
+	public static final int OBV0 = 100;
+
+	private RandomGenerator rgen;
+	private Physics physics;
+	private Rectangle player;
+	private Rectangle background;
 	/*
-	 * constants
+	 * ich denke, einen animierten boden könnte man am einfachsten
+	 * implementiere, dass man 1400p breite böden designt und aneinanderreiht
+	 * und sich mit den obstacles fortbewegen lässt und wieder am ende anfügt,
+	 * wenn er aus dem bild raus ist.
 	 */
+	private Rectangle ground;
+	private long lastTime;
+	private int obstacleSpeed;
+	private ObstacleList obstacleList;
 
-	/*
-	 * i guess it is von vorteil, die supportete resolution im model zu
-	 * behandeln. die view kann dann hochskalieren oder herunterskalieren. die
-	 * werte hier sind praktischerweise ein vielfaches der auflösung des
-	 * hochhauses. das sollte alles durch 50 teilbar sein. nah, man darf sich
-	 * doch auch mehr genauigkeit erlauben. wenn man dann eine low-res version
-	 * auf einem high-res bildschirm spielenmöchte, dann skaliert man auf der
-	 * view erst herunter und verliert genauigkeit und skaliert dann wieder
-	 * hoch. dann hat mans pixelig. das model liefert daten in seiner präzision
-	 * und das view baut sich daraus eine niedrigauflösende sicht. ähnlich wird
-	 * man dann für dass pixelarray die graphischen objekte, die man auf das
-	 * canvas setzen würde wie man es auf unseren konventionellen views getan
-	 * hat, überprüfen, wo im niedrigauflösenden raster sie ausreichend sind, um
-	 * sie als "daseiend" bewerten zu können. ich finde, das klingt umsetzbar.
-	 * (dies sind selbstgespräche, nevermind)
-	 */
-	public static final int RESOLUTION_X = 1400;
-	public static final int RESOLUTION_Y = 700;
-
-	// wie lange die true-schleife am ende pausiert
-	public static final double REFRESH_INTERVALL = 17;
-
-	// constants for the creation of the player rectangle
-	public static final int HERO_HEIGHT = 200;
-	public static final int HERO_WIDTH = 50;
-	public static final int HERO_START_X = 200;
-	public static final int HERO_START_Y = 400;
-	
-	public static final int GROUND_Y = HERO_HEIGHT + HERO_START_Y;
-	public static final int GROUND_HEIGHT = RESOLUTION_Y - GROUND_Y;
-
-	// constants for the physics. that's a cool word "physics". we implemented
-	// physics. heard that? physics.
-	// the start_speed:gravition 20:1 feels like a reasonable relation for now.
-	public static final int START_SPEED = 1600;
-	public static final int GRAVITATION = 8;
-	// adjusts stuff so it fits into the screen. increment one halves
-	// everything, decrement doubles it.
-	// higher value makes greater precision in the other values possible
-	public static final int ADJUSTMENT_RIGHTSHIFT = 10;
-	
-	// Color constants
-	public static final Color BACKGROUND_COLOR = Color.GRAY;
-	
-	//Obastacle variables
-	public static final int OBSTACLE_HEIGHT = 150;
-	public static final int OBSTACLE_WIDTH = 50;
-	public static final int OBSTACLE_START_X = 1400;
-	public static final int OBSTACLE_START_Y_ABOVE = 300;
-	public static final int OBSTACLE_START_Y_BELOW = 450;
-
-	static RandomGenerator rgen = new RandomGenerator();
-	int random;
-	
-	int i = 0;
-
-	/*
-	 * class variables
-	 */
-
-	/*
-	 * instance variables
-	 */
-	private long oldTime;
-	private Hero hero;
-	private Background background;
-	private Ground ground;
-	private obstacles;
-
-	/*
-	 * constructor
-	 */
 	public Model() {
+		this.physics = new Physics(GRAV);
+		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW);
+		this.lastTime = System.currentTimeMillis();
+		this.obstacleSpeed = OBV0;
+		this.rgen = new RandomGenerator();
+		this.obstacleList = new ObstacleList(1400, obstacleSpeed, OBW, OBH, physics);
+		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE);
+		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN);
 	}
 
-	/*
-	 * does stuff actually, if one was consequent, this method should be in the
-	 * controller, but it feels like it belongs here.
-	 */
-	public void initNewGame() {
-		this.oldTime = System.currentTimeMillis();
-		this.hero = new Hero(HERO_START_X, HERO_START_Y, HERO_WIDTH, HERO_HEIGHT, Color.YELLOW);
-		this.background = new Background(BACKGROUND_COLOR);
-		this.ground = new Ground(GROUND_Y, GROUND_HEIGHT, Color.GREEN);
-		this.obstacle = new Obstacle(OBSTACLE_START_X,obstacleState(), OBSTACLE_WIDTH, OBSTACLE_HEIGHT);
-		
-	}
-	
-	public int obstacleState() {
-		random = rgen.nextInt(1, 2);
-		if(i == 1) {
-			i= random;
-			return OBSTACLE_START_Y_ABOVE;
-		}else{
-			i= random;
-			return OBSTACLE_START_Y_BELOW;
-		}
+	public long getLastTime() {
+		return lastTime;
 	}
 
-	/*
-	 * getters and setters
-	 */
-	public Hero getHero() {
-		return hero;
+	public void setLastTime(long lastTime) {
+		this.lastTime = lastTime;
 	}
 
-	public Ground getGround() {
-		return ground;
+	public Rectangle getPlayer() {
+		return player;
 	}
 
-	public Background getBackground() {
+	public Rectangle getBackground() {
 		return background;
 	}
 
-	public void setOldTime(long oldTime) {
-		this.oldTime = oldTime;
+	public Rectangle getGround() {
+		return ground;
 	}
 
-	public long getOldTime() {
-		return oldTime;
+	public ObstacleList getObstacleList() {
+		return obstacleList;
 	}
-	
-	public Obstacle getObstacle() {
-		return obstacle;
-	}	
+
+	public RandomGenerator getRgen() {
+		return rgen;
+	}
+
 }
