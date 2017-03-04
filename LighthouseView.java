@@ -78,6 +78,7 @@ public class LighthouseView extends GraphicsProgram {
 
 	}
 
+	// needs proper comments
 	public void insertRectangle(Rectangle rec) {
 		int y = (this.lResY - 1) - (rec.getY() / 50);
 		if (rec.getY() % 50 > 25) {
