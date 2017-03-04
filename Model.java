@@ -34,7 +34,7 @@ public class Model {
 	public static final int DDIS = 51;
 	// GND is the effective height of the ground
 	public static final int GNDY = 10;
-	public static final int GNDH = 90;	
+	public static final int GNDH = 90;
 	public static final int GND = GNDY + GNDH;
 	// some properties for the generated obstacles
 	public static final int OBW = 100;

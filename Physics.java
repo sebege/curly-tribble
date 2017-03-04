@@ -3,7 +3,7 @@ package projektoo;
 public class Physics {
 
 	private int gravitation;
-	
+
 	public Physics(int gravitation) {
 		this.gravitation = gravitation;
 	}

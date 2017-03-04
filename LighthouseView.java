@@ -38,24 +38,6 @@ public class LighthouseView extends GraphicsProgram {
 		this.net.connect();
 	}
 
-	/**
-	 * our main method that initializes stuff and then starts the loop that
-	 * sends fresh array to the lighthouse
-	 * 
-	 * @param args
-	 * @throws UnknownHostException
-	 * @throws IOException
-	 */
-	// public static void main(String[] args) throws UnknownHostException,
-	// IOException {
-	//
-	// LighthouseView view = new LighthouseView();
-	//
-	// Thread ctrlThread = new Thread(view.getController());
-	// ctrlThread.start();
-	//
-	// }
-
 	public void init() {
 		addKeyListeners();
 	}
@@ -79,12 +61,12 @@ public class LighthouseView extends GraphicsProgram {
 	/*
 	 * useful methods
 	 */
-	
+
 	public void updateView() throws IOException {
 		this.updateByteArray();
 		this.getNet().send(this.getbArray());
 	}
-	
+
 	/**
 	 * constructs the Byte Array that is to be sent to the lighthouse
 	 */
@@ -116,7 +98,7 @@ public class LighthouseView extends GraphicsProgram {
 		int i;
 		for (int l = 0; l < width; l++) {
 			for (int m = 0; m < height; m++) {
-				if (0 <= x+l && x+l < lResX) {
+				if (0 <= x + l && x + l < lResX) {
 					i = (y - m) * this.lResX + (x + l);
 					fillWindow(rec.getColor(), i);
 				}
@@ -146,8 +128,8 @@ public class LighthouseView extends GraphicsProgram {
 	}
 
 	/**
-	 * fills the window with the index i from 0 to 391 of an byte[1176] with a given
-	 * color
+	 * fills the window with the index i from 0 to 391 of an byte[1176] with a
+	 * given color
 	 * 
 	 * @param color
 	 * @param i
@@ -178,14 +160,6 @@ public class LighthouseView extends GraphicsProgram {
 
 	public void setNet(LighthouseNetwork net) {
 		this.net = net;
-	}
-
-	public ArrayList<GeoObject> getStuffList() {
-		return stuffList;
-	}
-
-	public void setStuffList(ArrayList<GeoObject> stuffList) {
-		this.stuffList = stuffList;
 	}
 
 	public Controller getController() {

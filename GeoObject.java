@@ -54,7 +54,8 @@ public class GeoObject {
 	 * @param isInAir
 	 */
 	public GeoObject(int x, int y, int vx, int vy, int ax, int ay, Physics physics) {
-		// set false by standard. if that's wrong, the controller will correct it on start
+		// set false by standard. if that's wrong, the controller will correct
+		// it on start
 		this.isGravitationOn = false;
 		this.x = x;
 		this.y = y;
@@ -112,7 +113,7 @@ public class GeoObject {
 	 * computes the new acceleration and update the old
 	 */
 	private void updateAcceleration(int deltaT) {
-		
+
 	}
 
 	/**
