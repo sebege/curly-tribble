@@ -100,9 +100,9 @@ public class Controller implements Runnable {
 
 		// the 4 different coordinates of the 8 coordinates of the 4 points of a
 		int ax1 = a.getX();
-		int ax2 = ax1 + a.getWidth();
+		int ax2 = a.getX() + a.getWidth();
 		int ay1 = a.getY();
-		int ay2 = ay1 + a.getHeight();
+		int ay2 = a.getY() + a.getHeight();
 
 		// the 4 different coordinates of the 8 coordinates of the 4 points of b
 		int bx1 = b.getX();
@@ -111,18 +111,18 @@ public class Controller implements Runnable {
 		int by2 = by1 + b.getHeight();
 
 		// liegt die x koordinate eines punktes von b in der x ausdehnung von a?
-		boolean condition1 = (ax1 < bx1 && bx1 < ax2) || (ax1 < bx2 && bx2 < ax2);
+		boolean condition1 = (ax1 <= bx1 && bx1 <= ax2) || (ax1 <= bx2 && bx2 <= ax2);
 		// und eine y koordinate von b in denen von a?
-		boolean condition2 = (ay1 < by1 && by1 < ay2) || (ay1 < by2 && by2 < ay2);
+		boolean condition2 = (ay1 <= by1 && by1 <= ay2) || (ay1 <= by2 && by2 <= ay2);
 		// falls beides der falls ist, so liegt ein punkt von b in der fläche
 		// von a
 
-		// liegt die x koordinate eines punktes von b in der x ausdehnung von a?
-		boolean condition3 = (bx1 < ax1 && ax1 < bx2) || (bx1 < ax2 && ax2 < bx2);
+		// liegt die x koordinate eines punktes von ain der x ausdehnung von b?
+		boolean condition3 = (bx1 <= ax1 && ax1 <= bx2) || (bx1 <= ax2 && ax2 <= bx2);
 		// und eine y koordinate von b in denen von a?
-		boolean condition4 = (by1 < ay1 && ay1 < by2) || (by1 < ay2 && ay2 < by2);
-		// falls beides der falls ist, so liegt ein punkt von b in der fläche
-		// von a
+		boolean condition4 = (by1 <= ay1 && ay1 <= by2) || (by1 <= ay2 && ay2 <= by2);
+		// falls beides der falls ist, so liegt ein punkt von a in der fläche
+		// von b
 
 		if ((condition1 && condition2) || (condition3 && condition4)) {
 			answer = true;
@@ -152,7 +152,7 @@ public class Controller implements Runnable {
 			// only the obstacles with the lowest indexes could have surpassed
 			// the player.
 			// and always only the first possible obstacle is woth checking
-			if (obstacleList.get(i).getX() + obstacleList.get(i).getX() > player.getX()) {
+			if (obstacleList.get(i).getX() + obstacleList.get(i).getWidth() > player.getX()) {
 				theObstacle = obstacleList.get(i);
 			}
 			i++;

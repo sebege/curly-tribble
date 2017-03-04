@@ -4,14 +4,13 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-
 import acm.program.GraphicsProgram;
 
 /**
  * an unmotivated approach of implementing the lighthouse api. extends graphics
  * program so that i can add key listeners.
  */
+@SuppressWarnings("serial")
 public class LighthouseView extends GraphicsProgram {
 
 	/*

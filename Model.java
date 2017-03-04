@@ -1,8 +1,6 @@
 package projektoo;
 
 import java.awt.Color;
-import java.util.ArrayList;
-
 import acm.util.RandomGenerator;
 
 public class Model {
@@ -22,7 +20,7 @@ public class Model {
 	// that's because gravitation dragged him down before you saw the canvas
 	public static final int PLY = 100;
 	// player extension
-	public static final int PLW = 50;
+	public static final int PLW = 150;
 	public static final int PLH = 150;
 	// jump start speed in (approximately) millipixel per millisecond
 	public static final int JV0 = 1500;
@@ -37,18 +35,18 @@ public class Model {
 	public static final int GNDH = 90;
 	public static final int GND = GNDY + GNDH;
 	// some properties for the generated obstacles
-	public static final int OBW = 100;
+	public static final int OBW = 150;
 	public static final int OBH = 250;
 	// Obstacle starting speed
 	public static final int OBV0 = -500;
 	// obstacle high spawn y
 	public static final int OBHY = 200;
 	// obstavle high spawn height
-	public static final int OBHH = 250;
+	public static final int OBHH = 500;
 	// obstacle low spawn y
-	public static final int OBLY = 100;
+	public static final int OBLY = 0;
 	// obstacle low spawn height
-	public static final int OBLH = 200;
+	public static final int OBLH = 300;
 	// obstacle color
 	public static final Color OBC = Color.BLACK;
 	// distance between obstacles
