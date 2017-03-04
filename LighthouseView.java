@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import acm.program.GraphicsProgram;
 
 /**
- * an unmotivated approach of implementing the lighthouse api.
- * extends graphics program so that i can add key listeners.
+ * an unmotivated approach of implementing the lighthouse api. extends graphics
+ * program so that i can add key listeners.
  */
 public class LighthouseView extends GraphicsProgram {
 
@@ -21,7 +21,6 @@ public class LighthouseView extends GraphicsProgram {
 	private Model model;
 	private byte[] bArray;
 	private LighthouseNetwork net;
-	private ArrayList<GeoObject> stuffList;
 	private int lResX;
 	private int lResY;
 
@@ -32,7 +31,6 @@ public class LighthouseView extends GraphicsProgram {
 		this.lResX = 28;
 		this.lResY = 14;
 		this.bArray = new byte[1176];
-		this.stuffList = new ArrayList<GeoObject>();
 		this.net = new LighthouseNetwork();
 		this.model = new Model();
 		this.controller = new Controller(model);
@@ -81,50 +79,65 @@ public class LighthouseView extends GraphicsProgram {
 	/*
 	 * useful methods
 	 */
+	
+	public void updateView() throws IOException {
+		this.updateByteArray();
+		this.getNet().send(this.getbArray());
+	}
+	
 	/**
-	 * constructs the Byte Array that ist to be sent to the lighthouse
+	 * constructs the Byte Array that is to be sent to the lighthouse
 	 */
 	public void updateByteArray() {
 		insertBackground();
 		insertGround();
 		insertObstacles();
-		insertPlayer();
+		insertRectangle(this.model.getPlayer());
 
 	}
 
-	public void insertObstacles() {
-		ObstacleList list = this.getModel().getObstacleList();
-		for (int k = 0; k < list.size(); k++) {
-			Rectangle obstacle = list.get(k);
-			int x = obstacle.getX() / 50;
-			if (obstacle.getX() % 50 > 25) {
-				x += 1;
-			}
-			int y = lResY - (obstacle.getY() / 50);
-			int i;
-			int width = obstacle.getWidth() / 50;
-			int height = obstacle.getHeight() / 50;
-			// ich brauche eine downscale methode, die durch 50 teilt
-			for (int l = 0; l < width; l++) {
-				for (int m = 0; m < height; m++) {
+	public void insertRectangle(Rectangle rec) {
+		int y = (this.lResY - 1) - (rec.getY() / 50);
+		if (rec.getY() % 50 > 25) {
+			y -= 1;
+		}
+		int x = rec.getX() / 50;
+		if (rec.getX() % 50 > 25) {
+			x += 1;
+		}
+		int width = rec.getWidth() / 50;
+		if (rec.getWidth() % 50 > 25) {
+			width += 1;
+		}
+		int height = rec.getHeight() / 50;
+		if (rec.getHeight() % 50 > 25) {
+			height += 1;
+		}
+		int i;
+		for (int l = 0; l < width; l++) {
+			for (int m = 0; m < height; m++) {
+				if (0 <= x+l && x+l < lResX) {
 					i = (y - m) * this.lResX + (x + l);
-					fillWindow(obstacle.getColor(), i);
+					fillWindow(rec.getColor(), i);
 				}
 			}
 		}
 	}
 
+	public void insertObstacles() {
+		ObstacleList list = this.getModel().getObstacleList();
+		for (int i = 0; i < list.size(); i++) {
+			insertRectangle(list.get(i));
+		}
+	}
+
 	public void insertGround() {
 		Rectangle ground = this.getModel().getGround();
-		for (int i = (392 - 28); i < 392; i++) {
+		for (int i = (392 - 56); i < 392; i++) {
 			fillWindow(ground.getColor(), i);
 		}
 	}
 
-	/**
-	 * another unelegant method that changes every window to the color of the
-	 * background
-	 */
 	public void insertBackground() {
 		Rectangle background = this.getModel().getBackground();
 		for (int i = 0; i < 392; i++) {
@@ -133,31 +146,7 @@ public class LighthouseView extends GraphicsProgram {
 	}
 
 	/**
-	 * a very unelegant method that puts the player into the byte arrays. much
-	 * room for improvement. heavily dependent on the current setting of the
-	 * model.
-	 */
-	public void insertPlayer() {
-		Rectangle player = this.getModel().getPlayer();
-		int tempy = player.getY() / 50;
-		int y = this.lResY - tempy;
-		if (player.getY() % 50 > 25) {
-			y -= this.lResX;
-		}
-		int x = player.getX() / 50;
-		int i;
-		int width = player.getWidth() / 50;
-		int height = player.getHeight() / 50;
-		for (int l = 0; l < width; l++) {
-			for (int m = 0; m < height; m++) {
-				i = (y - m) * this.lResX + (x + l);
-				fillWindow(player.getColor(), i);
-			}
-		}
-	}
-
-	/**
-	 * fills the window with the index i from 0 to 391 of an byte[1176] with a
+	 * fills the window with the index i from 0 to 391 of an byte[1176] with a given
 	 * color
 	 * 
 	 * @param color
@@ -169,25 +158,6 @@ public class LighthouseView extends GraphicsProgram {
 			this.getbArray()[1 + i * 3] = (byte) color.getGreen();
 			this.getbArray()[2 + i * 3] = (byte) color.getBlue();
 		}
-	}
-
-	/**
-	 * clears and fills our stuffList with all the objects of the model that are
-	 * to be displayed on the lighthouse
-	 */
-	public void updateStuffList() {
-		this.getStuffList().clear();
-		this.getStuffList().add(this.getModel().getBackground());
-		this.getStuffList().add(this.getModel().getGround());
-		this.getStuffList().add(this.getModel().getPlayer());
-		for (int i = 0; i < this.getModel().getObstacleList().size(); i++) {
-			this.getStuffList().add(this.getModel().getObstacleList().get(i));
-		}
-	}
-
-	public void updateView() throws IOException {
-		this.updateByteArray();
-		this.getNet().send(this.getbArray());
 	}
 
 	/*
