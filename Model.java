@@ -20,7 +20,7 @@ public class Model {
 	// that's because gravitation dragged him down before you saw the canvas
 	public static final int PLY = 100;
 	// player extension
-	public static final int PLW = 150;
+	public static final int PLW = 50;
 	public static final int PLH = 150;
 	// jump start speed in (approximately) millipixel per millisecond
 	public static final int JV0 = 1500;
@@ -29,7 +29,7 @@ public class Model {
 	// the duration of the duck move in milliseconds
 	public static final int DDUR = 1000;
 	// the ducking amount(?). how much the player shrings through ducking.
-	public static final int DDIS = 51;
+	public static final int DDIS = 101;
 	// GND is the effective height of the ground
 	public static final int GNDY = 10;
 	public static final int GNDH = 90;
@@ -42,7 +42,7 @@ public class Model {
 	// obstacle high spawn y
 	public static final int OBHY = 200;
 	// obstavle high spawn height
-	public static final int OBHH = 500;
+	public static final int OBHH = 700;
 	// obstacle low spawn y
 	public static final int OBLY = 0;
 	// obstacle low spawn height
