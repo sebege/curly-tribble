@@ -1,23 +1,20 @@
 package projektoo;
 
-import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-
 import acm.graphics.GLabel;
 import acm.graphics.GRect;
 import acm.program.*;
 
+@SuppressWarnings("serial")
 public class View extends GraphicsProgram {
 
 	private Controller controller;
 	private Model model;
-	private ArrayList<GRect> gRectList;
 
 	public View() {
 		this.model = new Model();
-		this.controller = new Controller(model, this);
-		this.gRectList = new ArrayList<GRect>();
+		this.controller = new Controller(model);
+		controller.setView(this);
 	}
 
 	public void init() {

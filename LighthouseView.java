@@ -6,9 +6,12 @@ import java.util.ArrayList;
 
 public class LighthouseView {
 
+
 	/*
 	 * ivars
 	 */
+	private Runnable controller;
+	private Model model;
 	private Timer timer;
 	private byte[] bArray;
 	private LighthouseNetwork net;
@@ -17,12 +20,16 @@ public class LighthouseView {
 	/*
 	 * constructor
 	 */
-	public LighthouseView() {
+	public LighthouseView() throws UnknownHostException, IOException {
 		this.timer = new Timer(100);
 		timer.reset();
 		this.bArray = new byte[1176];
 		this.stuffList = new ArrayList<GeoObject>();
 		this.net = new LighthouseNetwork();
+		this.model = new Model();
+		this.controller = new Controller(model);
+		((Controller) this.controller).setlView(this);
+		this.net.connect();
 	}
 
 	/**
@@ -34,15 +41,10 @@ public class LighthouseView {
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		
 		LighthouseView view = new LighthouseView();
-		view.getNet().connect();
 		
-		// main loop
-		while (true) {
-			// our stuff List needs to be updated every cycle
-			view.updateStuffList();
-			view.getNet().send(view.getbArray());
-			view.getTimer().pause();
-		}
+		Thread ctrlThread = new Thread(view.getController());
+		ctrlThread.start();
+		
 	}
 
 	/*
@@ -53,6 +55,11 @@ public class LighthouseView {
 	 */
 	public void updateStuffList() {
 
+	}
+	
+	public void updateView() throws IOException {
+		this.updateStuffList();
+		this.getNet().send(this.getbArray());
 	}
 
 	
@@ -90,4 +97,21 @@ public class LighthouseView {
 	public void setStuffList(ArrayList<GeoObject> stuffList) {
 		this.stuffList = stuffList;
 	}
+
+	public Runnable getController() {
+		return controller;
+	}
+
+	public void setController(Runnable controller) {
+		this.controller = controller;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+	
 }

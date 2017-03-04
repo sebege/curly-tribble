@@ -1,14 +1,16 @@
 package projektoo;
 
+import java.io.IOException;
+
 public class Controller implements Runnable {
 
 	private Model model;
 	private View view;
+	private LighthouseView lView;
 	private Timer timer;
 
-	public Controller(Model model, View view) {
+	public Controller(Model model) {
 		this.model = model;
-		this.view = view;
 		this.timer = new Timer(Model.INTERVALL);
 		timer.reset();
 	}
@@ -17,14 +19,25 @@ public class Controller implements Runnable {
 		enforceGravitation(model.getPlayer());
 		while (true) {
 			updateModel(System.currentTimeMillis());
-			view.updateView();
-			if(isGameOver(model.getPlayer(), model.getObstacleList())) {
+			if (view != null) {
+				view.updateView();
+			}
+			if (lView != null) {
+				try {
+					lView.updateView();
+				} catch (IOException e) {
+					System.out.println("IOException occured. Get some coffee and fix it.");
+				}
+			}
+			if (isGameOver(model.getPlayer(), model.getObstacleList())) {
 				timer.pause();
 				break;
-			}			
+			}
 			timer.pause();
 		}
-		view.gameOverView();
+		if (view != null) {
+			view.gameOverView();
+		}
 	}
 
 	/*
@@ -117,10 +130,12 @@ public class Controller implements Runnable {
 
 		return answer;
 	}
-	
+
 	/**
-	 * takes the player and the obstacle list and determines, whether the player overlaps with an obstacle.
-	 * first searches the list for the oldest obstacle, that is not behind the player and then calls do overlap on them.
+	 * takes the player and the obstacle list and determines, whether the player
+	 * overlaps with an obstacle. first searches the list for the oldest
+	 * obstacle, that is not behind the player and then calls do overlap on
+	 * them.
 	 * 
 	 * @param player
 	 * @param obstacleList
@@ -131,11 +146,13 @@ public class Controller implements Runnable {
 		Rectangle theObstacle = null;
 		// the oldest obstacle has the index 0
 		int i = 0;
-		while(theObstacle == null) {
-			// if the right vertical border of the obstacle is on the right of the player, then a collision is still possible
-			// only the obstacles with the lowest indexes could have surpassed the player.
+		while (theObstacle == null) {
+			// if the right vertical border of the obstacle is on the right of
+			// the player, then a collision is still possible
+			// only the obstacles with the lowest indexes could have surpassed
+			// the player.
 			// and always only the first possible obstacle is woth checking
-			if(obstacleList.get(i).getX() + obstacleList.get(i).getX() > player.getX()) {
+			if (obstacleList.get(i).getX() + obstacleList.get(i).getX() > player.getX()) {
 				theObstacle = obstacleList.get(i);
 			}
 			i++;
@@ -178,6 +195,14 @@ public class Controller implements Runnable {
 				model.getObstacleList().addNewObstacle(Model.OBHY, Model.OBHH, Model.OBC);
 			}
 		}
+	}
+
+	public void setView(View view) {
+		this.view = view;
+	}
+
+	public void setlView(LighthouseView lView) {
+		this.lView = lView;
 	}
 
 }
