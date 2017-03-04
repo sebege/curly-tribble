@@ -15,7 +15,7 @@ public class Model {
 	// 2 could be fixed by using double values and converting to int only when
 	// setting up the view
 	// INTERVALL and low velocities
-	public static final double INTERVALL = 16;
+	public static final double INTERVALL = 20;
 	// player start coordinates
 	public static final int PLX = 200;
 	// if you set this PLY value high, but the player doesn't appear high:
@@ -40,7 +40,7 @@ public class Model {
 	public static final int OBW = 100;
 	public static final int OBH = 250;
 	// Obstacle starting speed
-	public static final int OBV0 = -400;
+	public static final int OBV0 = -500;
 	// obstacle high spawn y
 	public static final int OBHY = 200;
 	// obstavle high spawn height
