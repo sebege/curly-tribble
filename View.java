@@ -23,6 +23,7 @@ public class View extends GraphicsProgram {
 	}
 
 	public void run() {
+		getGCanvas().requestFocus();
 		Thread ctrlThread = new Thread(controller);
 		ctrlThread.start();
 	}

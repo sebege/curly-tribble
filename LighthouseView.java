@@ -63,6 +63,7 @@ public class LighthouseView extends GraphicsProgram {
 	}
 
 	public void run() {
+		getGCanvas().requestFocus();
 		Thread ctrlThread = new Thread(this.getController());
 		ctrlThread.start();
 	}
