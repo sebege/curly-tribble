@@ -65,14 +65,9 @@ public class Model {
 	private Rectangle ground;
 	private long lastTime;
 	private ObstacleList obstacleList;
-	private int modus;
 	private RandomGenerator rgen;
 
 	public Model() {
-		this.modus = modus;
-		if(modus == 0) {
-			
-		}
 		this.rgen = new RandomGenerator();
 		this.physics = new Physics(GRAV);
 		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW, DDIS);
