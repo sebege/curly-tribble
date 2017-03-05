@@ -3,25 +3,22 @@ package projektoo;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import acm.util.RandomGenerator;
+
 /**
  * this class shall be an ArrayList that contains Obstacles and provides some
  * methods useful for our assignment. i guess it will be comfy to have an own
  * class for it.
+ * 
  *
  */
 @SuppressWarnings("serial")
 public class ObstacleList extends ArrayList<Rectangle> {
+	
+	private int resX;
 
-	private int spawnX;
-	private int spawnVx;
-	private int spawnWidth;
-	private Physics physics;
-
-	public ObstacleList(int spawnX, int spawnVx, int spawnWidth, Physics physics) {
-		this.spawnX = spawnX;
-		this.spawnVx = spawnVx;
-		this.spawnWidth = spawnWidth;
-		this.physics = physics;
+	public ObstacleList(int resX) {
+		this.resX = resX;
 	}
 
 	/**
@@ -35,21 +32,10 @@ public class ObstacleList extends ArrayList<Rectangle> {
 	 */
 	public int getDistance() {
 		if (size() >= 1) {
-			return spawnX - (get(size() - 1).getX() + get(size() - 1).getWidth());
+			return resX - (get(size() - 1).getX() + get(size() - 1).getWidth());
 		} else {
-			return spawnX;
+			return resX;
 		}
-	}
-
-	/**
-	 * takes a start y coordinate and a color and adds a nicely standardized
-	 * obstacle to the List
-	 * 
-	 * @param y
-	 * @param color
-	 */
-	public void addNewObstacle(int y, int spawnHeight, Color color) {
-		add(new Rectangle(spawnX, y, spawnWidth, spawnHeight, spawnVx, 0, 0, 0, physics, color, 0));
 	}
 
 	/**
@@ -61,20 +47,6 @@ public class ObstacleList extends ArrayList<Rectangle> {
 			if ((get(i).getX()) + (get(i).getWidth()) < 0) {
 				remove(i);
 			}
-		}
-	}
-
-	/**
-	 * sets all obstacles speed to vx and adjusts the spawn vx for the not yet
-	 * created obstacles
-	 * 
-	 * @param vx
-	 *            horizontal velocity
-	 */
-	public void setAllObstaclesXVelocity(int vx) {
-		spawnVx = vx;
-		for (int i = 0; i < size(); i++) {
-			get(i).setVx(vx);
 		}
 	}
 

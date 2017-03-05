@@ -1,23 +1,21 @@
 package projektoo;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import acm.program.GraphicsProgram;
+
+import acm.graphics.GRect;
 
 /**
  * an unmotivated approach of implementing the lighthouse api. extends graphics
  * program so that i can add key listeners.
  */
 @SuppressWarnings("serial")
-public class LighthouseView extends GraphicsProgram {
+public class LighthouseView extends View {
 
 	/*
 	 * ivars
 	 */
-	private Controller controller;
-	private Model model;
 	private byte[] bArray;
 	private LighthouseNetwork net;
 	private int lResX;
@@ -27,43 +25,26 @@ public class LighthouseView extends GraphicsProgram {
 	 * constructor
 	 */
 	public LighthouseView() throws UnknownHostException, IOException {
+		super();
 		this.lResX = 28;
 		this.lResY = 14;
 		this.bArray = new byte[1176];
 		this.net = new LighthouseNetwork();
-		this.model = new Model();
-		this.controller = new Controller(model);
-		this.controller.setlView(this);
 		this.net.connect();
-	}
-
-	public void init() {
-		addKeyListeners();
-	}
-
-	public void run() {
-		getGCanvas().requestFocus();
-		Thread ctrlThread = new Thread(this.getController());
-		ctrlThread.start();
-	}
-
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			controller.jump();
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			controller.duck(System.currentTimeMillis());
-		}
 	}
 
 	/*
 	 * useful methods
 	 */
-
-	public void updateView() throws IOException {
+	@Override
+	public void updateView() {
+		removeAll();
 		this.updateByteArray();
-		this.getNet().send(this.getbArray());
+		try {
+			this.getNet().send(this.getbArray());
+		} catch (IOException e) {
+			System.out.println("go get some coffee and fix this.");
+		}
 	}
 
 	/**
@@ -101,6 +82,7 @@ public class LighthouseView extends GraphicsProgram {
 				if (0 <= x + l && x + l < lResX) {
 					i = (y - m) * this.lResX + (x + l);
 					fillWindow(rec.getColor(), i);
+					addGSquare(rec.getColor(), x+l, y-m);
 				}
 			}
 		}
@@ -117,6 +99,7 @@ public class LighthouseView extends GraphicsProgram {
 		Rectangle ground = this.getModel().getGround();
 		for (int i = (392 - 56); i < 392; i++) {
 			fillWindow(ground.getColor(), i);
+			addGSquare(ground.getColor(), i % 28, i / 28);
 		}
 	}
 
@@ -124,6 +107,7 @@ public class LighthouseView extends GraphicsProgram {
 		Rectangle background = this.getModel().getBackground();
 		for (int i = 0; i < 392; i++) {
 			fillWindow(background.getColor(), i);
+			addGSquare(background.getColor(), i % 28, i / 28);
 		}
 	}
 
@@ -140,6 +124,13 @@ public class LighthouseView extends GraphicsProgram {
 			this.getbArray()[1 + i * 3] = (byte) color.getGreen();
 			this.getbArray()[2 + i * 3] = (byte) color.getBlue();
 		}
+	}
+	
+	public void addGSquare(Color color, int x, int y) {
+		GRect grect = new GRect(x * 50, y * 50, 50, 50);
+			grect.setColor(color);
+			grect.setFilled(true);
+			add(grect);
 	}
 
 	/*
@@ -162,20 +153,20 @@ public class LighthouseView extends GraphicsProgram {
 		this.net = net;
 	}
 
-	public Controller getController() {
-		return controller;
+	public int getlResX() {
+		return lResX;
 	}
 
-	public void setController(Controller controller) {
-		this.controller = controller;
+	public void setlResX(int lResX) {
+		this.lResX = lResX;
 	}
 
-	public Model getModel() {
-		return model;
+	public int getlResY() {
+		return lResY;
 	}
 
-	public void setModel(Model model) {
-		this.model = model;
+	public void setlResY(int lResY) {
+		this.lResY = lResY;
 	}
 
 }

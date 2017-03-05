@@ -1,6 +1,7 @@
 package projektoo;
 
 import java.awt.Color;
+
 import acm.util.RandomGenerator;
 
 public class Model {
@@ -13,7 +14,7 @@ public class Model {
 	// 2 could be fixed by using double values and converting to int only when
 	// setting up the view
 	// INTERVALL and low velocities
-	public static final double INTERVALL = 20;
+	public static final double PERIOD = 20;
 	// player start coordinates
 	public static final int PLX = 200;
 	// if you set this PLY value high, but the player doesn't appear high:
@@ -52,7 +53,6 @@ public class Model {
 	// distance between obstacles
 	public static final int OBD = 500;
 
-	private RandomGenerator rgen;
 	private Physics physics;
 	private Rectangle player;
 	private Rectangle background;
@@ -64,16 +64,20 @@ public class Model {
 	 */
 	private Rectangle ground;
 	private long lastTime;
-	private int obstacleSpeed;
 	private ObstacleList obstacleList;
+	private int modus;
+	private RandomGenerator rgen;
 
 	public Model() {
+		this.modus = modus;
+		if(modus == 0) {
+			
+		}
+		this.rgen = new RandomGenerator();
 		this.physics = new Physics(GRAV);
 		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW, DDIS);
 		this.lastTime = System.currentTimeMillis();
-		this.obstacleSpeed = OBV0;
-		this.rgen = new RandomGenerator();
-		this.obstacleList = new ObstacleList(1400, obstacleSpeed, OBW, physics);
+		this.obstacleList = new ObstacleList(RES_X);
 		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE, 0);
 		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN, 0);
 	}
@@ -100,6 +104,10 @@ public class Model {
 
 	public ObstacleList getObstacleList() {
 		return obstacleList;
+	}
+
+	public Physics getPhysics() {
+		return physics;
 	}
 
 	public RandomGenerator getRgen() {

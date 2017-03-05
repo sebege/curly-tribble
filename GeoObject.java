@@ -73,13 +73,14 @@ public class GeoObject {
 	 *            the new vertical velocity caused by the jump
 	 */
 	public void jump(int vy0) {
-		// sets y velocity to the jump speed
-		setVy(vy0);
-		/*
-		 * dieser setter ist ein bisschen redu
-		 */
-		setGravitationOn(true);
+		if (!isGravitationOn()) {
+			// sets y velocity to the jump speed
+			setVy(vy0);
+			setGravitationOn(true);
+		}
 	}
+	
+	
 
 	/*
 	 * below you'll see the methods responsible for updating properties

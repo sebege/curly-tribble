@@ -1,17 +1,15 @@
 package projektoo;
 
-import java.io.IOException;
-
 public class Controller implements Runnable {
 
 	private Model model;
 	private View view;
-	private LighthouseView lView;
 	private Timer timer;
 
-	public Controller(Model model) {
+	public Controller(Model model, View view) {
 		this.model = model;
-		this.timer = new Timer(Model.INTERVALL);
+		this.view = view;
+		this.timer = new Timer(Model.PERIOD);
 		timer.reset();
 	}
 
@@ -19,25 +17,14 @@ public class Controller implements Runnable {
 		enforceGravitation(model.getPlayer());
 		while (true) {
 			updateModel(System.currentTimeMillis());
-			if (view != null) {
-				view.updateView();
-			}
-			if (lView != null) {
-				try {
-					lView.updateView();
-				} catch (IOException e) {
-					System.out.println("IOException occured. Get some coffee and fix it.");
-				}
-			}
+			view.updateView();
 			if (isGameOver(model.getPlayer(), model.getObstacleList())) {
 				timer.pause();
 				break;
 			}
 			timer.pause();
 		}
-		if (view != null) {
-			view.gameOverView();
-		}
+		view.gameOverView();
 	}
 
 	/*
@@ -71,6 +58,7 @@ public class Controller implements Runnable {
 		model.getObstacleList().removeOldObstacles();
 		unduckPlayer(thisTime);
 		hitGround(model.getPlayer());
+		enforceGravitation(model.getPlayer());
 		model.setLastTime(thisTime);
 	}
 
@@ -143,21 +131,25 @@ public class Controller implements Runnable {
 	 */
 	public boolean isGameOver(Rectangle player, ObstacleList obstacleList) {
 		boolean answer = false;
-		Rectangle theObstacle = null;
-		// the oldest obstacle has the index 0
-		int i = 0;
-		while (theObstacle == null) {
-			// if the right vertical border of the obstacle is on the right of
-			// the player, then a collision is still possible
-			// only the obstacles with the lowest indexes could have surpassed
-			// the player.
-			// and always only the first possible obstacle is woth checking
-			if (obstacleList.get(i).getX() + obstacleList.get(i).getWidth() > player.getX()) {
-				theObstacle = obstacleList.get(i);
+		if (obstacleList.size() > 0) {
+			Rectangle theObstacle = null;
+			// the oldest obstacle has the index 0
+			int i = 0;
+			while (theObstacle == null) {
+				// if the right vertical border of the obstacle is on the right
+				// of
+				// the player, then a collision is still possible
+				// only the obstacles with the lowest indexes could have
+				// surpassed
+				// the player.
+				// and always only the first possible obstacle is woth checking
+				if (obstacleList.get(i).getX() + obstacleList.get(i).getWidth() > player.getX()) {
+					theObstacle = obstacleList.get(i);
+				}
+				i++;
 			}
-			i++;
+			answer = doOverlap(player, theObstacle);
 		}
-		answer = doOverlap(player, theObstacle);
 		return answer;
 	}
 
@@ -180,29 +172,20 @@ public class Controller implements Runnable {
 			a.setGravitationOn(true);
 		}
 	}
-
+	
 	/**
 	 * experimental method that shall control the spawning flow of new
 	 * obstacles. for now i'll make it static, later it should be randomized
 	 */
-	private void controlObstacleSpawn() {
+	public void controlObstacleSpawn() {
 		if (model.getObstacleList().getDistance() > Model.OBD) {
 			// if the random generator says "1", the obstacle will spawn low, if
 			// it says "0" it'll spawn high
 			if (model.getRgen().nextInt(2) == 1) {
-				model.getObstacleList().addNewObstacle(Model.OBLY, Model.OBLH, Model.OBC);
+				model.getObstacleList().add(new Rectangle(1400, Model.OBLY, Model.OBW, Model.OBLH, Model.OBV0, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
 			} else {
-				model.getObstacleList().addNewObstacle(Model.OBHY, Model.OBHH, Model.OBC);
+				model.getObstacleList().add(new Rectangle(1400, Model.OBHY, Model.OBW, Model.OBHH, Model.OBV0, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
 			}
 		}
 	}
-
-	public void setView(View view) {
-		this.view = view;
-	}
-
-	public void setlView(LighthouseView lView) {
-		this.lView = lView;
-	}
-
 }
