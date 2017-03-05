@@ -1,9 +1,6 @@
 package projektoo;
 
-import java.awt.Color;
 import java.util.ArrayList;
-
-import acm.util.RandomGenerator;
 
 /**
  * this class shall be an ArrayList that contains Obstacles and provides some

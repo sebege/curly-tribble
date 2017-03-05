@@ -33,6 +33,8 @@ public class GeoObject {
 	protected Physics physics;
 	// whether a ground offers resistance to gravity
 	protected boolean isGravitationOn;
+	protected boolean jettingUp;
+	protected boolean jettingDown;
 
 	/**
 	 * constructor with many parameters. adding emptier constructors somehow
@@ -79,8 +81,17 @@ public class GeoObject {
 			setGravitationOn(true);
 		}
 	}
-	
-	
+
+	public void jetOn(int ayu) {
+		setAy(ay + ayu);
+		if (ayu > 0) {
+			setGravitationOn(true);
+		}
+	}
+
+	public void jetOff(int ayu) {
+		setAy(ay - ayu);
+	}
 
 	/*
 	 * below you'll see the methods responsible for updating properties

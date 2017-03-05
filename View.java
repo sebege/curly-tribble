@@ -34,7 +34,25 @@ public class View extends GraphicsProgram {
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			controller.duck(System.currentTimeMillis());
 		}
+		
+//		if (e.getKeyCode() == 'W') {
+//			controller.jetUp();
+//		}
+//
+//		if (e.getKeyCode() == 'S') {
+//			controller.jetDown();
+//		}
 	}
+	
+//	public void keyReleased(KeyEvent e) {
+//		if (e.getKeyCode() == 'W') {
+//			controller.jetUpOff();
+//		}
+//		
+//		if (e.getKeyCode() == 'S') {
+//			controller.jetDownOff();
+//		}
+//	}
 
 	public void updateView() {
 	}

@@ -34,6 +34,22 @@ public class Controller implements Runnable {
 	public void jump() {
 		model.getPlayer().jump(Model.JV0);
 	}
+	
+	public void jetUp() {
+		model.getPlayer().jetOn(1);
+	}
+	
+	public void jetUpOff() {
+		model.getPlayer().jetOff(1);
+	}
+	
+	public void jetDown() {
+		model.getPlayer().jetOn(-1);
+	}
+	
+	public void jetDownOff() {
+		model.getPlayer().jetOff(-1);
+	}
 
 	/**
 	 * 
@@ -182,9 +198,9 @@ public class Controller implements Runnable {
 			// if the random generator says "1", the obstacle will spawn low, if
 			// it says "0" it'll spawn high
 			if (model.getRgen().nextInt(2) == 1) {
-				model.getObstacleList().add(new Rectangle(1400, Model.OBLY, Model.OBW, Model.OBLH, Model.OBV0, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
+				model.getObstacleList().add(new Rectangle(1400, Model.OBLY, Model.OBW, Model.OBLH, model.obstacleSpeed, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
 			} else {
-				model.getObstacleList().add(new Rectangle(1400, Model.OBHY, Model.OBW, Model.OBHH, Model.OBV0, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
+				model.getObstacleList().add(new Rectangle(1400, Model.OBHY, Model.OBW, Model.OBHH, model.obstacleSpeed, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
 			}
 		}
 	}

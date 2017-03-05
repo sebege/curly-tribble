@@ -43,11 +43,11 @@ public class Model {
 	// obstacle high spawn y
 	public static final int OBHY = 200;
 	// obstavle high spawn height
-	public static final int OBHH = 700;
+	public static final int OBHH = 250;
 	// obstacle low spawn y
-	public static final int OBLY = 0;
+	public static final int OBLY = 100;
 	// obstacle low spawn height
-	public static final int OBLH = 300;
+	public static final int OBLH = 250;
 	// obstacle color
 	public static final Color OBC = Color.BLACK;
 	// distance between obstacles
@@ -66,6 +66,7 @@ public class Model {
 	private long lastTime;
 	private ObstacleList obstacleList;
 	private RandomGenerator rgen;
+	public int obstacleSpeed;
 
 	public Model() {
 		this.rgen = new RandomGenerator();
@@ -73,6 +74,7 @@ public class Model {
 		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW, DDIS);
 		this.lastTime = System.currentTimeMillis();
 		this.obstacleList = new ObstacleList(RES_X);
+		this.obstacleSpeed = OBV0;
 		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE, 0);
 		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN, 0);
 	}
