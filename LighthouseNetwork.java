@@ -1,4 +1,4 @@
-package projektoo;
+package projectoo;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,4 +1,4 @@
-package projektoo;
+package projectoo;
 
 /**
  * (Actually this class is somewhat like a mass point. Only without any mass,
@@ -13,10 +13,10 @@ package projektoo;
 /*
  * das abschalten und anschalten von gravitation sollte besser so geregelt
  * werden, dass der controller checkt, in richtung der gravitation ein
- * gegenstand halt bietet und dann und wenn er als nicht am boden zählt (also
+ * gegenstand halt bietet und dann und wenn er als nicht am boden z??hlt (also
  * insgesamt getriggert wurde) die gravitation neutralisiert und im umgekehrten
- * fall draufzieht. dazu braucht man natürlich eine methode, die sowas
- * überprüfen kann und die gehört auf die controller ebene.
+ * fall draufzieht. dazu braucht man nat??rlich eine methode, die sowas
+ * ??berpr??fen kann und die geh??rt auf die controller ebene.
  */
 public class GeoObject {
 
@@ -33,8 +33,10 @@ public class GeoObject {
 	protected Physics physics;
 	// whether a ground offers resistance to gravity
 	protected boolean isGravitationOn;
-	protected boolean jettingUp;
-	protected boolean jettingDown;
+	protected int jetUp;
+	protected int jetDown;
+	protected int moveUp;
+	protected int moveDown;
 
 	/**
 	 * constructor with many parameters. adding emptier constructors somehow
@@ -80,17 +82,6 @@ public class GeoObject {
 			setVy(vy0);
 			setGravitationOn(true);
 		}
-	}
-
-	public void jetOn(int ayu) {
-		setAy(ay + ayu);
-		if (ayu > 0) {
-			setGravitationOn(true);
-		}
-	}
-
-	public void jetOff(int ayu) {
-		setAy(ay - ayu);
 	}
 
 	/*
@@ -141,9 +132,9 @@ public class GeoObject {
 
 	public int getAy() {
 		if (isGravitationOn) {
-			return ay + physics.getGravitation();
+			return ay + physics.getGravitation() + getJetUp() + getJetDown();
 		} else {
-			return ay;
+			return ay + getJetUp() + getJetDown();
 		}
 	}
 
@@ -167,12 +158,12 @@ public class GeoObject {
 		return vx;
 	}
 
-	public void setVx(int vx) {
-		this.vx = vx;
+	public int getVy() {
+		return vy + getMoveUp() + getMoveDown();
 	}
 
-	public int getVy() {
-		return vy;
+	public void setVx(int vx) {
+		this.vx = vx;
 	}
 
 	public void setVy(int vy) {
@@ -205,5 +196,37 @@ public class GeoObject {
 
 	public void setAy(int ay) {
 		this.ay = ay;
+	}
+
+	public int getJetUp() {
+		return jetUp;
+	}
+
+	public void setJetUp(int jetUp) {
+		this.jetUp = jetUp;
+	}
+
+	public int getJetDown() {
+		return jetDown;
+	}
+
+	public void setJetDown(int jetDown) {
+		this.jetDown = jetDown;
+	}
+
+	public int getMoveUp() {
+		return moveUp;
+	}
+
+	public void setMoveUp(int moveUp) {
+		this.moveUp = moveUp;
+	}
+
+	public int getMoveDown() {
+		return moveDown;
+	}
+
+	public void setMoveDown(int moveDown) {
+		this.moveDown = moveDown;
 	}
 }

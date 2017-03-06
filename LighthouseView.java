@@ -1,4 +1,4 @@
-package projektoo;
+package projectoo;
 
 import java.awt.Color;
 import java.io.IOException;

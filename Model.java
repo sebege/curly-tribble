@@ -1,4 +1,4 @@
-package projektoo;
+package projectoo;
 
 import java.awt.Color;
 
@@ -24,9 +24,9 @@ public class Model {
 	public static final int PLW = 50;
 	public static final int PLH = 150;
 	// jump start speed in (approximately) millipixel per millisecond
-	public static final int JV0 = 1500;
+	public static final int JV0 = 2000;
 	// gravitation in (approximately) millipixel per square millisecond
-	public static final int GRAV = -3;
+	public static final int GRAV = -4;
 	// the duration of the duck move in milliseconds
 	public static final int DDUR = 1000;
 	// the ducking amount(?). how much the player shrings through ducking.
@@ -36,10 +36,10 @@ public class Model {
 	public static final int GNDH = 90;
 	public static final int GND = GNDY + GNDH;
 	// some properties for the generated obstacles
-	public static final int OBW = 150;
+	public static final int OBW = 100;
 	public static final int OBH = 250;
 	// Obstacle starting speed
-	public static final int OBV0 = -500;
+	public static final int OBV0 = -100;
 	// obstacle high spawn y
 	public static final int OBHY = 200;
 	// obstavle high spawn height
@@ -57,26 +57,26 @@ public class Model {
 	private Rectangle player;
 	private Rectangle background;
 	/*
-	 * ich denke, einen animierten boden könnte man am einfachsten
-	 * implementiere, dass man 1400p breite böden designt und aneinanderreiht
-	 * und sich mit den obstacles fortbewegen lässt und wieder am ende anfügt,
+	 * ich denke, einen animierten boden k??nnte man am einfachsten
+	 * implementiere, dass man 1400p breite b??den designt und aneinanderreiht
+	 * und sich mit den obstacles fortbewegen l??sst und wieder am ende anf??gt,
 	 * wenn er aus dem bild raus ist.
 	 */
 	private Rectangle ground;
 	private long lastTime;
 	private ObstacleList obstacleList;
 	private RandomGenerator rgen;
-	public int obstacleSpeed;
+	private int obstacleSpeed;
 
 	public Model() {
 		this.rgen = new RandomGenerator();
 		this.physics = new Physics(GRAV);
-		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW, DDIS);
+		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW, DDIS,0);
 		this.lastTime = System.currentTimeMillis();
 		this.obstacleList = new ObstacleList(RES_X);
 		this.obstacleSpeed = OBV0;
-		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE, 0);
-		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN, 0);
+		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE, 0,0);
+		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN, 0,0);
 	}
 
 	public long getLastTime() {
@@ -109,6 +109,10 @@ public class Model {
 
 	public RandomGenerator getRgen() {
 		return rgen;
+	}
+
+	public int getObstacleSpeed() {
+		return obstacleSpeed;
 	}
 
 }

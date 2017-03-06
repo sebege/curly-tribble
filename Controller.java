@@ -1,10 +1,12 @@
-package projektoo;
+package projectoo;
 
 public class Controller implements Runnable {
 
 	private Model model;
 	private View view;
 	private Timer timer;
+
+	private final static int HEIGHT_COUNT_LIMIT = 100;
 
 	public Controller(Model model, View view) {
 		this.model = model;
@@ -18,6 +20,9 @@ public class Controller implements Runnable {
 		while (true) {
 			updateModel(System.currentTimeMillis());
 			view.updateView();
+			if (this.view.getMode() == 3) {
+				
+			}
 			if (isGameOver(model.getPlayer(), model.getObstacleList())) {
 				timer.pause();
 				break;
@@ -34,21 +39,76 @@ public class Controller implements Runnable {
 	public void jump() {
 		model.getPlayer().jump(Model.JV0);
 	}
-	
+
 	public void jetUp() {
-		model.getPlayer().jetOn(1);
+		model.getPlayer().setJetUp(1);
+		model.getPlayer().setGravitationOn(true);
 	}
-	
+
 	public void jetUpOff() {
-		model.getPlayer().jetOff(1);
+		model.getPlayer().setJetUp(0);
 	}
-	
+
 	public void jetDown() {
-		model.getPlayer().jetOn(-1);
+		model.getPlayer().setJetDown(-1);
+	}
+
+	public void jetDownOff() {
+		model.getPlayer().setJetDown(0);
+	}
+
+	public void moveUp() {
+		switch (this.view.getMode()) {
+		case 2:
+			model.getPlayer().setMoveUp(500);
+			model.getPlayer().setGravitationOn(true);
+			break;
+		case 3:
+			moveAllObstaclesUp(500);
+		}
+	}
+
+	public void moveUpOff() {
+		switch (this.view.getMode()) {
+		case 2:
+			model.getPlayer().setMoveUp(0);
+			break;
+		case 3:
+			moveAllObstaclesUp(0);
+		}
+	}
+
+	public void moveDown() {
+		switch (this.view.getMode()) {
+		case 2:
+			model.getPlayer().setMoveDown(-500);
+			break;
+		case 3:
+			moveAllObstaclesDown(-500);
+		}
+	}
+
+	public void moveDownOff() {
+		switch (this.view.getMode()) {
+		case 2:
+			model.getPlayer().setMoveDown(0);
+			break;
+		case 3:
+			moveAllObstaclesDown(0);
+		}
+	}
+
+	// Move all Obstacles
+	public void moveAllObstaclesUp(int move) {
+		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
+			this.model.getObstacleList().get(i).setMoveUp(move);
+		}
 	}
 	
-	public void jetDownOff() {
-		model.getPlayer().jetOff(-1);
+	public void moveAllObstaclesDown(int move) {
+		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
+			this.model.getObstacleList().get(i).setMoveDown(move);
+		}
 	}
 
 	/**
@@ -59,6 +119,16 @@ public class Controller implements Runnable {
 	public void duck(long duckStart) {
 		if (model.getPlayer().getIsDucked() < 0) {
 			model.getPlayer().duck(duckStart);
+		}
+	}
+	
+	public void moveMode3(){
+		if(model.getPlayer().getMoveUp() > 0 && model.getPlayer().getY() < Model.RES_Y){
+			model.getPlayer().setMoveDown(0);
+			model.getPlayer().setMoveUp(450);
+		}else if(model.getPlayer().getMoveDown() < Model.RES_Y && model.getPlayer().getY() > Model.GNDY){
+			model.getPlayer().setMoveUp(0);
+			model.getPlayer().setMoveDown(450);
 		}
 	}
 
@@ -72,7 +142,10 @@ public class Controller implements Runnable {
 		controlObstacleSpawn();
 		model.getObstacleList().updateAllObstacles(deltaT);
 		model.getObstacleList().removeOldObstacles();
-		unduckPlayer(thisTime);
+		controlObstacleSpawn();
+		if (this.view.getMode() != 3) {
+			unduckPlayer(thisTime);
+		}
 		hitGround(model.getPlayer());
 		enforceGravitation(model.getPlayer());
 		model.setLastTime(thisTime);
@@ -118,14 +191,14 @@ public class Controller implements Runnable {
 		boolean condition1 = (ax1 < bx1 && bx1 < ax2) || (ax1 < bx2 && bx2 < ax2);
 		// und eine y koordinate von b in denen von a?
 		boolean condition2 = (ay1 < by1 && by1 < ay2) || (ay1 < by2 && by2 < ay2);
-		// falls beides der falls ist, so liegt ein punkt von b in der fläche
+		// falls beides der falls ist, so liegt ein punkt von b in der fl??che
 		// von a
 
 		// liegt die x koordinate eines punktes von ain der x ausdehnung von b?
 		boolean condition3 = (bx1 < ax1 && ax1 < bx2) || (bx1 < ax2 && ax2 < bx2);
 		// und eine y koordinate von b in denen von a?
 		boolean condition4 = (by1 < ay1 && ay1 < by2) || (by1 < ay2 && ay2 < by2);
-		// falls beides der falls ist, so liegt ein punkt von a in der fläche
+		// falls beides der falls ist, so liegt ein punkt von a in der fl??che
 		// von b
 
 		if ((condition1 && condition2) || (condition3 && condition4)) {
@@ -169,6 +242,23 @@ public class Controller implements Runnable {
 		return answer;
 	}
 
+	// generate random GameOver Text
+	public String gameOverText() {
+		// control text in case if something went wrong
+		String text = "something went terribly wrong";
+		switch (model.getRgen().nextInt(2)) {
+		case 0:
+			text = "Key Vigenère: gameover\n nie ildwkknoi kvw ftlk ffdiw, huf ls zrauyqh wo xyurayucpp.";
+			break;
+		case 1:
+			text = "his existence was only brief, but he enjoyed it thoroughly";
+			break;
+		default:
+			text = "wrong number";
+		}
+		return text;
+	}
+
 	// verbesserungsvorschlag: diese methode passiert dann, wenn in richtung der
 	// gravitation eine kollision passiert
 	// dazu muss der boden erstmal zu einem echten objekt werden
@@ -180,7 +270,7 @@ public class Controller implements Runnable {
 		}
 	}
 
-	// setzt Gravitation in Kraft, wenn Objekt über dem Boden ist
+	// setzt Gravitation in Kraft, wenn Objekt ??ber dem Boden ist
 	// should not be used on obstacles, because the shall stay in the air, when
 	// they are set there
 	private void enforceGravitation(GeoObject a) {
@@ -188,7 +278,7 @@ public class Controller implements Runnable {
 			a.setGravitationOn(true);
 		}
 	}
-	
+
 	/**
 	 * experimental method that shall control the spawning flow of new
 	 * obstacles. for now i'll make it static, later it should be randomized
@@ -198,9 +288,11 @@ public class Controller implements Runnable {
 			// if the random generator says "1", the obstacle will spawn low, if
 			// it says "0" it'll spawn high
 			if (model.getRgen().nextInt(2) == 1) {
-				model.getObstacleList().add(new Rectangle(1400, Model.OBLY, Model.OBW, Model.OBLH, model.obstacleSpeed, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
+				model.getObstacleList().add(new Rectangle(1400, Model.OBLY, Model.OBW, Model.OBLH,
+						model.getObstacleSpeed(), 0, 0, 0, model.getPhysics(), Model.OBC, 0, 1));
 			} else {
-				model.getObstacleList().add(new Rectangle(1400, Model.OBHY, Model.OBW, Model.OBHH, model.obstacleSpeed, 0, 0, 0, model.getPhysics(), Model.OBC, 0));
+				model.getObstacleList().add(new Rectangle(1400, Model.OBHY, Model.OBW, Model.OBHH,
+						model.getObstacleSpeed(), 0, 0, 0, model.getPhysics(), Model.OBC, 0, 0));
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package projektoo;
+package projectoo;
 
 import java.awt.event.KeyEvent;
 
@@ -9,6 +9,7 @@ public class View extends GraphicsProgram {
 
 	protected Controller controller;
 	protected Model model;
+	private int mode;
 
 	public View() {
 		this.model = new Model();
@@ -21,6 +22,7 @@ public class View extends GraphicsProgram {
 	}
 
 	public void run() {
+		mode = 3;
 		getGCanvas().requestFocus();
 		Thread ctrlThread = new Thread(controller);
 		ctrlThread.start();
@@ -34,25 +36,53 @@ public class View extends GraphicsProgram {
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			controller.duck(System.currentTimeMillis());
 		}
-		
-//		if (e.getKeyCode() == 'W') {
-//			controller.jetUp();
-//		}
-//
-//		if (e.getKeyCode() == 'S') {
-//			controller.jetDown();
-//		}
+
+		if (e.getKeyCode() == 'W') {
+			switch (mode) {
+			case 2:
+				controller.jetUp();
+				break;
+			case 3:
+				controller.moveUp();
+				break;
+			}
+		}
+
+		if (e.getKeyCode() == 'S') {
+			switch (mode) {
+			case 2:
+				controller.jetDown();
+				break;
+			case 3:
+				controller.moveDown();
+				break;
+			}
+		}
 	}
-	
-//	public void keyReleased(KeyEvent e) {
-//		if (e.getKeyCode() == 'W') {
-//			controller.jetUpOff();
-//		}
-//		
-//		if (e.getKeyCode() == 'S') {
-//			controller.jetDownOff();
-//		}
-//	}
+
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == 'W') {
+			switch (mode) {
+			case 2:
+				controller.jetUpOff();
+				break;
+			case 3:
+				controller.moveUpOff();
+				break;
+			}
+		}
+
+		if (e.getKeyCode() == 'S') {
+			switch (mode) {
+			case 2:
+				controller.jetDownOff();
+				break;
+			case 3:
+				controller.moveDownOff();
+				break;
+			}
+		}
+	}
 
 	public void updateView() {
 	}
@@ -74,6 +104,14 @@ public class View extends GraphicsProgram {
 
 	public void setModel(Model model) {
 		this.model = model;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 
 }

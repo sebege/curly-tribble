@@ -1,4 +1,4 @@
-package projektoo;
+package projectoo;
 
 import java.awt.Color;
 
@@ -15,6 +15,9 @@ public class Rectangle extends GeoObject {
 	// -1 means it's not ducked. else it contains the time it got ducked
 	protected long isDucked;
 	protected int duckDistance;
+	
+	//only important for mode 3
+	protected int startY;
 
 	/**
 	 * 
@@ -30,13 +33,14 @@ public class Rectangle extends GeoObject {
 	 * @param color
 	 */
 	public Rectangle(int x, int y, int width, int height, int vx, int vy, int ax, int ay, Physics physics, Color color,
-			int duckDistance) {
+			int duckDistance, int startY) {
 		super(x, y, vx, vy, ax, ay, physics);
 		this.width = width;
 		this.height = height;
 		this.color = color;
 		this.isDucked = -1;
 		this.duckDistance = duckDistance;
+		this.startY = startY;
 	}
 
 	public void duck(long duckStart) {
@@ -81,6 +85,10 @@ public class Rectangle extends GeoObject {
 
 	public void setDuckDistance(int duckDistance) {
 		this.duckDistance = duckDistance;
+	}
+	
+	public int getStartY(){
+		return this.startY;
 	}
 
 }

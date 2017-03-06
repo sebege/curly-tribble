@@ -1,4 +1,4 @@
-package projektoo;
+package projectoo;
 
 import acm.graphics.GLabel;
 import acm.graphics.GRect;
@@ -17,9 +17,17 @@ public class HighResView extends View {
 
 	public void gameOverView() {
 		removeAll();
-		add(new GLabel("his existence was only brief, but he enjoyed it thoroughly."), 50, 200);
-	}
+		String[] halfText = this.controller.gameOverText().split("\n");
+		for (int i = 0; i < halfText.length; i++) {
 
+			GLabel gameOver = new GLabel(halfText[i]);
+			gameOver.setFont("SansSerif-36");
+			int height = (int) ((getHeight() - ((halfText.length) * gameOver.getHeight())) / 2);
+			add(gameOver, (getWidth() - gameOver.getWidth()) / 2,
+					height + (halfText.length * i) * gameOver.getHeight());
+		}
+	}
+	
 	/**
 	 * calls addGrect on every Rectangle that is to be put onto the canvas
 	 */
