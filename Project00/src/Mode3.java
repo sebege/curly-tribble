@@ -18,11 +18,11 @@ public class Mode3 {
 			for (int i = 0; i < this.model.getObstacleList().size(); i++) {
 				int y = this.model.getObstacleList().get(i).getY();
 				if (y > 0 && y < this.model.RES_Y) {
-					if(heightCount <= HEIGHT_COUNT_LIMIT){
-						
+					if(heightCount <= HEIGHT_COUNT_LIMIT && heightCount > 0){
+					        y = this.model.RES_Y+heightCount;
 					}
-					if(heightCount >= HEIGHT_COUNT_LIMIT){
-						
+					if(heightCount >= -HEIGHT_COUNT_LIMIT && heightCoint < 0){
+						y = this.model.RES_Y + heightCount;
 					}
 					this.model.getObstacleList().get(i).setY(y);
 				}
