@@ -24,9 +24,9 @@ public class Model {
 	public static final int PLW = 50;
 	public static final int PLH = 150;
 	// jump start speed in (approximately) millipixel per millisecond
-	public static final int JV0 = 1500;
+	public static final int JV0 = 2000;
 	// gravitation in (approximately) millipixel per square millisecond
-	public static final int GRAV = -3;
+	public static final int GRAV = -4;
 	// the duration of the duck move in milliseconds
 	public static final int DDUR = 1000;
 	// the ducking amount(?). how much the player shrings through ducking.
@@ -66,7 +66,7 @@ public class Model {
 	private long lastTime;
 	private ObstacleList obstacleList;
 	private RandomGenerator rgen;
-	public int obstacleSpeed;
+	private int obstacleSpeed;
 
 	public Model() {
 		this.rgen = new RandomGenerator();
@@ -109,6 +109,10 @@ public class Model {
 
 	public RandomGenerator getRgen() {
 		return rgen;
+	}
+
+	public int getObstacleSpeed() {
+		return obstacleSpeed;
 	}
 
 }

@@ -13,8 +13,8 @@ public class Physics {
 		return s;
 	}
 
-	public double zeitGeschwindigkeitGesetz(int a, int t) {
-		double v = (a * t);
+	public int zeitGeschwindigkeitGesetz(int a, int t) {
+		int v = (a * t);
 		return v;
 	}
 
