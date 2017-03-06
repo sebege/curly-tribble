@@ -26,7 +26,7 @@ public class Model {
 	// jump start speed in (approximately) millipixel per millisecond
 	public static final int JV0 = 2000;
 	// gravitation in (approximately) millipixel per square millisecond
-	public static final int GRAV = -4;
+	public static final int GRAV = 0;
 	// the duration of the duck move in milliseconds
 	public static final int DDUR = 1000;
 	// the ducking amount(?). how much the player shrings through ducking.
@@ -39,7 +39,7 @@ public class Model {
 	public static final int OBW = 150;
 	public static final int OBH = 250;
 	// Obstacle starting speed
-	public static final int OBV0 = -500;
+	public static final int OBV0 = -100;
 	// obstacle high spawn y
 	public static final int OBHY = 200;
 	// obstavle high spawn height

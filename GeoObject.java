@@ -33,8 +33,8 @@ public class GeoObject {
 	protected Physics physics;
 	// whether a ground offers resistance to gravity
 	protected boolean isGravitationOn;
-	protected boolean jettingUp;
-	protected boolean jettingDown;
+	protected boolean isJetting;
+	protected boolean isMoving;
 
 	/**
 	 * constructor with many parameters. adding emptier constructors somehow
@@ -83,14 +83,33 @@ public class GeoObject {
 	}
 
 	public void jetOn(int ayu) {
-		setAy(ay + ayu);
-		if (ayu > 0) {
-			setGravitationOn(true);
+		if (!isJetting()) {
+			setJetting(true);
+			setAy(ay + ayu);
+			if (ayu > 0) {
+				setGravitationOn(true);
+			}
 		}
 	}
 
 	public void jetOff(int ayu) {
 		setAy(ay - ayu);
+		setJetting(false);
+	}
+
+	public void moveOn(int vyu) {
+		if (!isMoving()) {
+			setMoving(true);
+			setVy(vy + vyu);
+			if (vyu > 0) {
+				setGravitationOn(true);
+			}
+		}
+	}
+
+	public void moveOff(int vyu) {
+		setVy(vy - vyu);
+		setMoving(false);
 	}
 
 	/*
@@ -206,4 +225,21 @@ public class GeoObject {
 	public void setAy(int ay) {
 		this.ay = ay;
 	}
+
+	public boolean isJetting() {
+		return isJetting;
+	}
+
+	public void setJetting(boolean isJetting) {
+		this.isJetting = isJetting;
+	}
+
+	public boolean isMoving() {
+		return isMoving;
+	}
+
+	public void setMoving(boolean isMoving) {
+		this.isMoving = isMoving;
+	}
+
 }

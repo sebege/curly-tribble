@@ -35,24 +35,40 @@ public class View extends GraphicsProgram {
 			controller.duck(System.currentTimeMillis());
 		}
 		
-//		if (e.getKeyCode() == 'W') {
-//			controller.jetUp();
-//		}
-//
-//		if (e.getKeyCode() == 'S') {
-//			controller.jetDown();
-//		}
+		if (e.getKeyCode() == 'W') {
+			controller.jetUp();
+		}
+
+		if (e.getKeyCode() == 'S') {
+			controller.jetDown();
+		}
+		
+		if (e.getKeyCode() == 'E') {
+			controller.moveUp();
+		}
+
+		if (e.getKeyCode() == 'D') {
+			controller.moveDown();
+		}
 	}
 	
-//	public void keyReleased(KeyEvent e) {
-//		if (e.getKeyCode() == 'W') {
-//			controller.jetUpOff();
-//		}
-//		
-//		if (e.getKeyCode() == 'S') {
-//			controller.jetDownOff();
-//		}
-//	}
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == 'W') {
+			controller.jetUpOff();
+		}
+		
+		if (e.getKeyCode() == 'S') {
+			controller.jetDownOff();
+		}
+		
+		if (e.getKeyCode() == 'E') {
+			controller.moveUpOff();
+		}
+		
+		if (e.getKeyCode() == 'D') {
+			controller.moveDownOff();
+		}
+	}
 
 	public void updateView() {
 	}

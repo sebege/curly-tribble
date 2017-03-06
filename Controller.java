@@ -50,6 +50,22 @@ public class Controller implements Runnable {
 	public void jetDownOff() {
 		model.getPlayer().jetOff(-1);
 	}
+	
+	public void moveUp() {
+		model.getPlayer().moveOn(500);
+	}
+	
+	public void moveUpOff() {
+		model.getPlayer().moveOff(500);
+	}
+	
+	public void moveDown() {
+		model.getPlayer().moveOn(-400);
+	}
+	
+	public void moveDownOff() {
+		model.getPlayer().moveOff(-400);
+	}
 
 	/**
 	 * 
@@ -69,9 +85,9 @@ public class Controller implements Runnable {
 	public void updateModel(long thisTime) {
 		int deltaT = (int) (thisTime - model.getLastTime());
 		model.getPlayer().updateObject(deltaT);
-		controlObstacleSpawn();
 		model.getObstacleList().updateAllObstacles(deltaT);
 		model.getObstacleList().removeOldObstacles();
+		controlObstacleSpawn();
 		unduckPlayer(thisTime);
 		hitGround(model.getPlayer());
 		enforceGravitation(model.getPlayer());
