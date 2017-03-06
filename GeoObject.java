@@ -33,8 +33,10 @@ public class GeoObject {
 	protected Physics physics;
 	// whether a ground offers resistance to gravity
 	protected boolean isGravitationOn;
-	protected boolean isJetting;
-	protected boolean isMoving;
+	protected int jetUp;
+	protected int jetDown;
+	protected int moveUp;
+	protected int moveDown;
 
 	/**
 	 * constructor with many parameters. adding emptier constructors somehow
@@ -80,36 +82,6 @@ public class GeoObject {
 			setVy(vy0);
 			setGravitationOn(true);
 		}
-	}
-
-	public void jetOn(int ayu) {
-		if (!isJetting()) {
-			setJetting(true);
-			setAy(ay + ayu);
-			if (ayu > 0) {
-				setGravitationOn(true);
-			}
-		}
-	}
-
-	public void jetOff(int ayu) {
-		setAy(ay - ayu);
-		setJetting(false);
-	}
-
-	public void moveOn(int vyu) {
-		if (!isMoving()) {
-			setMoving(true);
-			setVy(vy + vyu);
-			if (vyu > 0) {
-				setGravitationOn(true);
-			}
-		}
-	}
-
-	public void moveOff(int vyu) {
-		setVy(vy - vyu);
-		setMoving(false);
 	}
 
 	/*
@@ -160,10 +132,14 @@ public class GeoObject {
 
 	public int getAy() {
 		if (isGravitationOn) {
-			return ay + physics.getGravitation();
+			return ay + physics.getGravitation() + getJetUp() + getJetDown();
 		} else {
-			return ay;
+			return ay + getJetUp() + getJetDown();
 		}
+	}
+
+	public int getVy() {
+		return vy + getMoveUp() + getMoveDown();
 	}
 
 	public int getX() {
@@ -183,15 +159,11 @@ public class GeoObject {
 	}
 
 	public int getVx() {
-		return vx;
+			return vx;
 	}
 
 	public void setVx(int vx) {
 		this.vx = vx;
-	}
-
-	public int getVy() {
-		return vy;
 	}
 
 	public void setVy(int vy) {
@@ -226,20 +198,36 @@ public class GeoObject {
 		this.ay = ay;
 	}
 
-	public boolean isJetting() {
-		return isJetting;
+	public int getJetUp() {
+		return jetUp;
 	}
 
-	public void setJetting(boolean isJetting) {
-		this.isJetting = isJetting;
+	public void setJetUp(int jetUp) {
+		this.jetUp = jetUp;
 	}
 
-	public boolean isMoving() {
-		return isMoving;
+	public int getJetDown() {
+		return jetDown;
 	}
 
-	public void setMoving(boolean isMoving) {
-		this.isMoving = isMoving;
+	public void setJetDown(int jetDown) {
+		this.jetDown = jetDown;
+	}
+
+	public int getMoveUp() {
+		return moveUp;
+	}
+
+	public void setMoveUp(int moveUp) {
+		this.moveUp = moveUp;
+	}
+
+	public int getMoveDown() {
+		return moveDown;
+	}
+
+	public void setMoveDown(int moveDown) {
+		this.moveDown = moveDown;
 	}
 
 }

@@ -36,35 +36,37 @@ public class Controller implements Runnable {
 	}
 	
 	public void jetUp() {
-		model.getPlayer().jetOn(1);
+		model.getPlayer().setJetUp(1);
+		model.getPlayer().setGravitationOn(true);
 	}
 	
 	public void jetUpOff() {
-		model.getPlayer().jetOff(1);
+		model.getPlayer().setJetUp(0);
 	}
 	
 	public void jetDown() {
-		model.getPlayer().jetOn(-1);
+		model.getPlayer().setJetDown(-1);
 	}
 	
 	public void jetDownOff() {
-		model.getPlayer().jetOff(-1);
+		model.getPlayer().setJetDown(0);
 	}
 	
 	public void moveUp() {
-		model.getPlayer().moveOn(500);
+		model.getPlayer().setMoveUp(500);
+		model.getPlayer().setGravitationOn(true);
 	}
 	
 	public void moveUpOff() {
-		model.getPlayer().moveOff(500);
+		model.getPlayer().setMoveUp(0);
 	}
 	
 	public void moveDown() {
-		model.getPlayer().moveOn(-400);
+		model.getPlayer().setMoveDown(-500);
 	}
 	
 	public void moveDownOff() {
-		model.getPlayer().moveOff(-400);
+		model.getPlayer().setMoveDown(0);
 	}
 
 	/**
