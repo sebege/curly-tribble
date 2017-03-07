@@ -10,12 +10,13 @@ import java.util.ArrayList;
  *
  */
 @SuppressWarnings("serial")
-public class ObstacleList extends ArrayList<Rectangle> {
+public class ObstacleList extends RectangleList {
 	
-	private int resX;
+	private Model model;
 
-	public ObstacleList(int resX) {
-		this.resX = resX;
+	public ObstacleList(Model model) {
+		super();
+		this.model = model;
 	}
 
 	/**
@@ -29,9 +30,9 @@ public class ObstacleList extends ArrayList<Rectangle> {
 	 */
 	public int getDistance() {
 		if (size() >= 1) {
-			return resX - (get(size() - 1).getX() + get(size() - 1).getWidth());
+			return model.getResX() - (get(size() - 1).getX() + get(size() - 1).getWidth());
 		} else {
-			return resX;
+			return model.getResX();
 		}
 	}
 
@@ -44,17 +45,6 @@ public class ObstacleList extends ArrayList<Rectangle> {
 			if ((get(i).getX()) + (get(i).getWidth()) < 0) {
 				remove(i);
 			}
-		}
-	}
-
-	/**
-	 * calls the updateObject Method on every obstacle in the list
-	 * 
-	 * @param deltaT
-	 */
-	public void updateAllObstacles(int deltaT) {
-		for (int i = 0; i < size(); i++) {
-			get(i).updateObject(deltaT);
 		}
 	}
 

@@ -11,7 +11,7 @@ import acm.graphics.GRect;
  * program so that i can add key listeners.
  */
 @SuppressWarnings("serial")
-public class SpaceLighthouseView extends SpaceView {
+public class StandardLighthouseView extends StandardView {
 
 	/*
 	 * ivars
@@ -24,7 +24,7 @@ public class SpaceLighthouseView extends SpaceView {
 	/*
 	 * constructor
 	 */
-	public SpaceLighthouseView() throws UnknownHostException, IOException {
+	public StandardLighthouseView() throws UnknownHostException, IOException {
 		super();
 		this.lResX = 28;
 		this.lResY = 14;
@@ -83,13 +83,6 @@ public class SpaceLighthouseView extends SpaceView {
 					addGSquare(rec.getColor(), x+l, y-m);
 				}
 			}
-		}
-	}
-
-	public void insertObstacles() {
-		ObstacleList list = model.getObstacleList();
-		for (int i = 0; i < list.size(); i++) {
-			insertRectangle(list.get(i));
 		}
 	}
 

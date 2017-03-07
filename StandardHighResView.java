@@ -4,9 +4,9 @@ import acm.graphics.GLabel;
 import acm.graphics.GRect;
 
 @SuppressWarnings("serial")
-public class SpaceHighResView extends SpaceView {
+public class StandardHighResView extends StandardView {
 	
-	public SpaceHighResView() {
+	public StandardHighResView() {
 		super();
 	}
 

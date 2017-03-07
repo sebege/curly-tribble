@@ -29,14 +29,13 @@ public class GeoObject {
 	// acceleration
 	protected int ax;
 	protected int ay;
-	// the physics
-	protected Physics physics;
 	// whether a ground offers resistance to gravity
 	protected boolean isGravitationOn;
 	protected int jetUp;
 	protected int jetDown;
 	protected int moveUp;
 	protected int moveDown;
+	protected Model model;
 
 	/**
 	 * constructor with many parameters. adding emptier constructors somehow
@@ -54,12 +53,11 @@ public class GeoObject {
 	 *            horizontal acceleration
 	 * @param ay
 	 *            vertical acceleration
-	 * @param physics
-	 * @param isInAir
 	 */
-	public GeoObject(int x, int y, int vx, int vy, int ax, int ay, Physics physics) {
+	public GeoObject(int x, int y, int vx, int vy, int ax, int ay, Model model) {
 		// set false by standard. if that's wrong, the controller will correct
 		// it on start
+		this.model = model;
 		this.isGravitationOn = false;
 		this.x = x;
 		this.y = y;
@@ -67,7 +65,6 @@ public class GeoObject {
 		this.vy = vy;
 		this.ax = ax;
 		this.ay = ay;
-		this.physics = physics;
 	}
 
 	/**
@@ -97,8 +94,8 @@ public class GeoObject {
 	private void updatePlace(int deltaT) {
 		// since shift right 10 is almost like division by 1000, this makes
 		// pixel out of millipixel
-		x += (physics.zeitWegGesetz(getAx(), getVx(), deltaT)) >> 10;
-		y += (physics.zeitWegGesetz(getAy(), getVy(), deltaT)) >> 10;
+		x += (Physics.zeitWegGesetz(getAx(), getVx(), deltaT)) >> 10;
+		y += (Physics.zeitWegGesetz(getAy(), getVy(), deltaT)) >> 10;
 	}
 
 	/**
@@ -108,15 +105,14 @@ public class GeoObject {
 	 *            vergangene Zeit
 	 */
 	private void updateVelocity(int deltaT) {
-		vx += (physics.zeitGeschwindigkeitGesetz(getAx(), deltaT));
-		vy += (physics.zeitGeschwindigkeitGesetz(getAy(), deltaT));
+		vx += (Physics.zeitGeschwindigkeitGesetz(getAx(), deltaT));
+		vy += (Physics.zeitGeschwindigkeitGesetz(getAy(), deltaT));
 	}
 
 	/**
 	 * computes the new acceleration and update the old
 	 */
 	private void updateAcceleration(int deltaT) {
-
 	}
 
 	/**
@@ -131,8 +127,9 @@ public class GeoObject {
 	}
 
 	public int getAy() {
+
 		if (isGravitationOn) {
-			return ay + physics.getGravitation() + getJetUp() + getJetDown();
+			return ay + model.getGravitation() + getJetUp() + getJetDown();
 		} else {
 			return ay + getJetUp() + getJetDown();
 		}
@@ -176,14 +173,6 @@ public class GeoObject {
 
 	public void setAx(int ax) {
 		this.ax = ax;
-	}
-
-	public Physics getPhysics() {
-		return physics;
-	}
-
-	public void setPhysics(Physics physics) {
-		this.physics = physics;
 	}
 
 	public boolean isGravitationOn() {
@@ -230,4 +219,12 @@ public class GeoObject {
 		this.moveDown = moveDown;
 	}
 
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+	
 }

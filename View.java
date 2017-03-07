@@ -11,12 +11,10 @@ public class View extends GraphicsProgram {
 	protected Model model;
 
 	public View() {
-		this.model = new Model();
-		this.controller = new Controller(model, this);
 	}
 
 	public void init() {
-		setSize(Model.RES_X, Model.RES_Y);
+		setSize(model.getResX(), model.getResY());
 		addKeyListeners();
 	}
 
@@ -27,6 +25,7 @@ public class View extends GraphicsProgram {
 	}
 
 	public void keyPressed(KeyEvent e) {
+		
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			controller.jump();
 		}
@@ -74,22 +73,6 @@ public class View extends GraphicsProgram {
 	}
 
 	public void gameOverView() {
-	}
-
-	public Controller getController() {
-		return controller;
-	}
-
-	public void setController(Controller controller) {
-		this.controller = controller;
-	}
-
-	public Model getModel() {
-		return model;
-	}
-
-	public void setModel(Model model) {
-		this.model = model;
 	}
 
 }
