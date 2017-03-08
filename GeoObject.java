@@ -124,6 +124,7 @@ public class GeoObject {
 		if (y < 0) {
 			y = 0;
 		} else
+			//distinguish between obstacles and player
 			switch (modelType) {
 			case 0:
 				if (y + Model.OBH > Model.RES_Y) {
