@@ -12,6 +12,8 @@ abstract public class Controller implements Runnable {
 	abstract public void run();
 
 	abstract public void updateModel(long thisTime);
+	
+	abstract public void controlObstacleSpawn();
 
 	/**
 	 * takes two rectangles as arguments and then computes, whether they overlap

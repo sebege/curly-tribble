@@ -5,7 +5,7 @@ import acm.graphics.GRect;
 
 @SuppressWarnings("serial")
 public class StandardHighResView extends StandardView {
-	
+
 	public StandardHighResView() {
 		super();
 	}
@@ -17,7 +17,20 @@ public class StandardHighResView extends StandardView {
 
 	public void gameOverView() {
 		removeAll();
-		add(new GLabel("his existence was only brief, but he enjoyed it thoroughly."), 50, 200);
+		String gameOverText = null;
+		int r = model.rgen.nextInt(2);
+		if (r == 1) {
+			gameOverText = "his existence was only brief, but he enjoyed it thoroughly.";
+		} else {
+			gameOverText = "Key Vigenère: gameover \n nie ildwkknoi kvw ftlk ffdiw, huf ls zrauyqh wo xyurayucpp.";
+		}
+		String[] halfText = gameOverText.split("\n");
+		for (int i = 0; i < halfText.length; i++) {
+			GLabel gameOver = new GLabel(halfText[i]);
+			gameOver.setFont("Serif-36");
+			int height = (int) ((getHeight() - ((halfText.length) * gameOver.getHeight())) / 2);
+			add(gameOver, (getWidth() - gameOver.getWidth()) / 2,height + (halfText.length * i) * gameOver.getHeight());
+		}
 	}
 
 	/**
