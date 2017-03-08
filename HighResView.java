@@ -28,16 +28,28 @@ public class HighResView extends View {
 		}
 	}
 	
+
+	
 	/**
 	 * calls addGrect on every Rectangle that is to be put onto the canvas
 	 */
 	public void addGRects() {
-		addGRect(model.getBackground());
-		addGRect(model.getGround());
-		for (int i = 0; i < model.getObstacleList().size(); i++) {
-			addGRect(model.getObstacleList().get(i));
+		switch(getMode()){
+		case 0:
+			addGRect(model.getBackground());
+			addGRect(model.getGround());
+			for (int i = 0; i < model.getObstacleList().size(); i++) {
+				addGRect(model.getObstacleList().get(i));
+			}
+			addGRect(model.getPlayer());
+			break;
+		case 3:
+			addGRect(model.getBackground());
+			for (int i = 0; i < model.getObstacleList().size(); i++) {
+				addGRect(model.getObstacleList().get(i));
+			}
+			addGRect(model.getPlayer());
 		}
-		addGRect(model.getPlayer());
 	}
 
 	/**

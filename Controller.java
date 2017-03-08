@@ -5,8 +5,7 @@ public class Controller implements Runnable {
 	private Model model;
 	private View view;
 	private Timer timer;
-
-	private final static int HEIGHT_COUNT_LIMIT = 100;
+	private int state;
 
 	public Controller(Model model, View view) {
 		this.model = model;
@@ -17,19 +16,38 @@ public class Controller implements Runnable {
 
 	public void run() {
 		enforceGravitation(model.getPlayer());
-		while (true) {
-			updateModel(System.currentTimeMillis());
-			view.updateView();
-			if (this.view.getMode() == 3) {
-				
-			}
-			if (isGameOver(model.getPlayer(), model.getObstacleList())) {
+		switch (this.view.getMode()) {
+		case 0:
+			while (true) {
+				updateModel(System.currentTimeMillis());
+				view.updateView();
+				if (isGameOver(model.getPlayer(), model.getObstacleList())) {
+					timer.pause();
+					break;
+				}
 				timer.pause();
-				break;
 			}
-			timer.pause();
+			break;
+		case 3:
+			this.state = 0;
+			
+			while (true) {
+				updateModel(System.currentTimeMillis());
+				view.updateView();
+				this.model.getPlayer().setGravitationOn(false);
+				moveMode3(this.state);
+				// ist auf false für Versuche
+				if (false) {
+					timer.pause();
+					break;
+				}
+				timer.pause();
+			}
+			break;
 		}
+
 		view.gameOverView();
+		this.view.setGame(false);
 	}
 
 	/*
@@ -98,16 +116,82 @@ public class Controller implements Runnable {
 		}
 	}
 
-	// Move all Obstacles
-	public void moveAllObstaclesUp(int move) {
-		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
-			this.model.getObstacleList().get(i).setMoveUp(move);
+	// make Obstacle faster
+	public void moveFasterOn() {
+		switch (this.view.getMode()) {
+		case 3:
+			moveAllObstaclesFaster(-200);
 		}
 	}
-	
+
+	public void moveFasterOff() {
+		switch (this.view.getMode()) {
+		case 3:
+			moveAllObstaclesFaster(0);
+		}
+	}
+
+	// make Obstacle slower
+	public void moveSlowerOn() {
+		switch (this.view.getMode()) {
+		case 3:
+			moveAllObstaclesSlower(100);
+		}
+	}
+
+	public void moveSlowerOff() {
+		switch (this.view.getMode()) {
+		case 3:
+			moveAllObstaclesSlower(0);
+		}
+	}
+
+	// Move all Obstacles
+	/**
+	 * moves all present obstacle about move high up
+	 * 
+	 * @param move
+	 *            how far the obstacles move up
+	 */
+	public void moveAllObstaclesUp(int move) {
+		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
+			System.out.println(this.model.getObstacleList().get(i).getY()
+					+ this.model.getObstacleList().get(i).getHeight());
+			if (this.model.getObstacleList().get(i).getY()
+					+ this.model.getObstacleList().get(i).getHeight() < Model.RES_Y) {
+				this.model.getObstacleList().get(i).setMoveUp(move);
+			} else if (this.model.getObstacleList().get(i).getY()
+					+ this.model.getObstacleList().get(i).getHeight() >= Model.RES_Y) {
+				this.model.getObstacleList().get(i).setMoveUp(0);
+			}
+		}
+	}
+
+	/**
+	 * moves all present obstacle about move deep down
+	 * 
+	 * @param move
+	 *            how far the obstacles move down
+	 */
 	public void moveAllObstaclesDown(int move) {
 		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
-			this.model.getObstacleList().get(i).setMoveDown(move);
+			if (this.model.getObstacleList().get(i).getY() > 0) {
+				this.model.getObstacleList().get(i).setMoveDown(move);
+			} else if (this.model.getObstacleList().get(i).getY() <= 0) {
+				this.model.getObstacleList().get(i).setMoveDown(0);
+			}
+		}
+	}
+
+	public void moveAllObstaclesFaster(int move) {
+		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
+			this.model.getObstacleList().get(i).setMoveFaster(move);
+		}
+	}
+
+	public void moveAllObstaclesSlower(int move) {
+		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
+			this.model.getObstacleList().get(i).setMoveSlower(move);
 		}
 	}
 
@@ -121,14 +205,22 @@ public class Controller implements Runnable {
 			model.getPlayer().duck(duckStart);
 		}
 	}
-	
-	public void moveMode3(){
-		if(model.getPlayer().getMoveUp() > 0 && model.getPlayer().getY() < Model.RES_Y){
-			model.getPlayer().setMoveDown(0);
+
+	//moves the player continuously up and down
+	public void moveMode3(int state) {
+
+		if (state == 0) {
 			model.getPlayer().setMoveUp(450);
-		}else if(model.getPlayer().getMoveDown() < Model.RES_Y && model.getPlayer().getY() > Model.GNDY){
-			model.getPlayer().setMoveUp(0);
-			model.getPlayer().setMoveDown(450);
+			if (model.getPlayer().getY() + model.getPlayer().getHeight() >= Model.RES_Y) {
+				this.state = 1;
+				model.getPlayer().setMoveUp(0);
+			}
+		} else if (state == 1) {
+			model.getPlayer().setMoveDown(-450);
+			if (model.getPlayer().getY() <= 0) {
+				this.state = 0;
+				model.getPlayer().setMoveDown(0);
+			}
 		}
 	}
 
@@ -138,11 +230,12 @@ public class Controller implements Runnable {
 
 	public void updateModel(long thisTime) {
 		int deltaT = (int) (thisTime - model.getLastTime());
-		model.getPlayer().updateObject(deltaT);
+		model.getPlayer().updateObject(deltaT,1);
 		controlObstacleSpawn();
-		model.getObstacleList().updateAllObstacles(deltaT);
-		model.getObstacleList().removeOldObstacles();
-		controlObstacleSpawn();
+		if (model.getObstacleList() != null) {
+			model.getObstacleList().updateAllObstacles(deltaT);
+			model.getObstacleList().removeOldObstacles();
+		}
 		if (this.view.getMode() != 3) {
 			unduckPlayer(thisTime);
 		}

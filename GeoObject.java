@@ -37,6 +37,24 @@ public class GeoObject {
 	protected int jetDown;
 	protected int moveUp;
 	protected int moveDown;
+	protected int moveFaster;
+	protected int moveSlower;
+
+	public int getMoveFaster() {
+		return moveFaster;
+	}
+
+	public void setMoveFaster(int moveFaster) {
+		this.moveFaster = moveFaster;
+	}
+
+	public int getMoveSlower() {
+		return moveSlower;
+	}
+
+	public void setMoveSlower(int moveSlower) {
+		this.moveSlower = moveSlower;
+	}
 
 	/**
 	 * constructor with many parameters. adding emptier constructors somehow
@@ -93,12 +111,30 @@ public class GeoObject {
 	 * 
 	 * @param deltaT
 	 *            vergangene zeit
+	 * @param modelType
+	 *            0: Obstacle 1: player
 	 */
-	private void updatePlace(int deltaT) {
+	private void updatePlace(int deltaT, int modelType) {
 		// since shift right 10 is almost like division by 1000, this makes
 		// pixel out of millipixel
 		x += (physics.zeitWegGesetz(getAx(), getVx(), deltaT)) >> 10;
 		y += (physics.zeitWegGesetz(getAy(), getVy(), deltaT)) >> 10;
+		if (y < 0) {
+			y = 0;
+		} else
+			switch (modelType) {
+			case 0:
+				if (y + Model.OBH > Model.RES_Y) {
+					y = Model.RES_Y - Model.OBH;
+				}
+				break;
+			case 1: 
+				if (y + Model.PLH> Model.RES_Y) {
+					y = Model.RES_Y - Model.PLH;
+				}
+				break;
+			}
+
 	}
 
 	/**
@@ -124,8 +160,8 @@ public class GeoObject {
 	 * 
 	 * @param deltaT
 	 */
-	public void updateObject(int deltaT) {
-		updatePlace(deltaT);
+	public void updateObject(int deltaT, int modelType) {
+		updatePlace(deltaT,modelType);
 		updateVelocity(deltaT);
 		updateAcceleration(deltaT);
 	}
@@ -155,7 +191,7 @@ public class GeoObject {
 	}
 
 	public int getVx() {
-		return vx;
+		return vx + getMoveFaster() + getMoveSlower();
 	}
 
 	public int getVy() {

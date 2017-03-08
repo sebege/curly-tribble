@@ -54,7 +54,8 @@ public class ObstacleList extends ArrayList<Rectangle> {
 	 */
 	public void updateAllObstacles(int deltaT) {
 		for (int i = 0; i < size(); i++) {
-			get(i).updateObject(deltaT);
+			if(get(i) != null)
+			get(i).updateObject(deltaT,0);
 		}
 	}
 

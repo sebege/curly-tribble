@@ -2,14 +2,26 @@ package projectoo;
 
 import java.awt.event.KeyEvent;
 
+import acm.graphics.GLabel;
 import acm.program.GraphicsProgram;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram {
 
+	public void textTest() {
+
+		GLabel gameOver = new GLabel("Test");
+		gameOver.setFont("SansSerif-36");
+		int height = (int) ((getHeight() - gameOver.getHeight()) / 2);
+		add(gameOver, (getWidth() - gameOver.getWidth()) / 2, height + gameOver.getHeight());
+	}
+
 	protected Controller controller;
 	protected Model model;
 	private int mode;
+
+	// game is still playing or not
+	private boolean game;
 
 	public View() {
 		this.model = new Model();
@@ -21,11 +33,17 @@ public class View extends GraphicsProgram {
 		addKeyListeners();
 	}
 
+	/*
+	 * here change modi!
+	 * 0 = normal
+	 * 3 = obstacle
+	 */
 	public void run() {
-		mode = 3;
-		getGCanvas().requestFocus();
+		this.game = true;
+		this.mode = 3;
 		Thread ctrlThread = new Thread(controller);
 		ctrlThread.start();
+		getGCanvas().requestFocus();
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -58,9 +76,51 @@ public class View extends GraphicsProgram {
 				break;
 			}
 		}
+
+		if (e.getKeyCode() == 'A') {
+			switch (mode) {
+			case 3:
+				controller.moveFasterOn();
+			}
+		}
+
+		if (e.getKeyCode() == 'D') {
+			switch (mode) {
+			case 3:
+				controller.moveSlowerOn();
+			}
+		}
+
+		if (e.getKeyCode() == '0' && this.game == false) {
+			this.mode = 0;
+			this.game = true;
+			System.out.println("0");
+		}
+
+		if (e.getKeyCode() == '1' && this.game == false) {
+			this.mode = 1;
+			this.game = true;
+			System.out.println("1");
+		}
+
+		if (e.getKeyCode() == '2' && this.game == false) {
+			this.mode = 2;
+			this.game = true;
+			System.out.println("2");
+		}
+
+		if (e.getKeyCode() == '3' && this.game == false) {
+			this.mode = 3;
+			this.game = true;
+			System.out.println("3");
+		}
+
+		if (e.getKeyCode() == 'R' && game == false) {
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
+
 		if (e.getKeyCode() == 'W') {
 			switch (mode) {
 			case 2:
@@ -80,6 +140,20 @@ public class View extends GraphicsProgram {
 			case 3:
 				controller.moveDownOff();
 				break;
+			}
+		}
+
+		if (e.getKeyCode() == 'A') {
+			switch (mode) {
+			case 3:
+				controller.moveFasterOff();
+			}
+		}
+
+		if (e.getKeyCode() == 'D') {
+			switch (mode) {
+			case 3:
+				controller.moveSlowerOff();
 			}
 		}
 	}
@@ -114,4 +188,11 @@ public class View extends GraphicsProgram {
 		this.mode = mode;
 	}
 
+	public boolean getGame() {
+		return this.game;
+	}
+
+	public void setGame(boolean game) {
+		this.game = game;
+	}
 }

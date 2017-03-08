@@ -39,7 +39,7 @@ public class Model {
 	public static final int OBW = 100;
 	public static final int OBH = 250;
 	// Obstacle starting speed
-	public static final int OBV0 = -100;
+	public static final int OBV0 = -450;
 	// obstacle high spawn y
 	public static final int OBHY = 200;
 	// obstavle high spawn height
