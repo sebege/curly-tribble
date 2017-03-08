@@ -8,14 +8,6 @@ import acm.program.GraphicsProgram;
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram {
 
-	public void textTest() {
-
-		GLabel gameOver = new GLabel("Test");
-		gameOver.setFont("SansSerif-36");
-		int height = (int) ((getHeight() - gameOver.getHeight()) / 2);
-		add(gameOver, (getWidth() - gameOver.getWidth()) / 2, height + gameOver.getHeight());
-	}
-
 	protected Controller controller;
 	protected Model model;
 	private int mode;
@@ -39,8 +31,8 @@ public class View extends GraphicsProgram {
 	 * 3 = obstacle
 	 */
 	public void run() {
-		this.game = true;
-		this.mode = 3;
+		this.game = false;
+		this.mode = -1;
 		Thread ctrlThread = new Thread(controller);
 		ctrlThread.start();
 		getGCanvas().requestFocus();
@@ -116,6 +108,7 @@ public class View extends GraphicsProgram {
 		}
 
 		if (e.getKeyCode() == 'R' && game == false) {
+			this.game = true;
 		}
 	}
 
@@ -158,6 +151,9 @@ public class View extends GraphicsProgram {
 		}
 	}
 
+	public void requestRestart(){
+	}
+	
 	public void updateView() {
 	}
 

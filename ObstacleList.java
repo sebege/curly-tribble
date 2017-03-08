@@ -58,5 +58,12 @@ public class ObstacleList extends ArrayList<Rectangle> {
 			get(i).updateObject(deltaT,0);
 		}
 	}
+	
+	//delete all obstacles
+	public void reset(){
+		for(int i = 0; i < size(); i++){
+			this.clear();
+		}
+	}
 
 }

@@ -119,6 +119,8 @@ public class GeoObject {
 		// pixel out of millipixel
 		x += (physics.zeitWegGesetz(getAx(), getVx(), deltaT)) >> 10;
 		y += (physics.zeitWegGesetz(getAy(), getVy(), deltaT)) >> 10;
+		
+		//for not letting the objects out of the box in vertical way
 		if (y < 0) {
 			y = 0;
 		} else

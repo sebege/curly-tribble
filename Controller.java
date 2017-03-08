@@ -15,39 +15,46 @@ public class Controller implements Runnable {
 	}
 
 	public void run() {
-		enforceGravitation(model.getPlayer());
-		switch (this.view.getMode()) {
-		case 0:
-			while (true) {
-				updateModel(System.currentTimeMillis());
-				view.updateView();
-				if (isGameOver(model.getPlayer(), model.getObstacleList())) {
+		while (true) {
+			enforceGravitation(model.getPlayer());
+			switch (this.view.getMode()) {
+			case 0:
+				while (true) {
+					updateModel(System.currentTimeMillis());
+					view.updateView();
+					if (isGameOver(model.getPlayer(), model.getObstacleList())) {
+						timer.pause();
+						break;
+					}
 					timer.pause();
-					break;
 				}
-				timer.pause();
-			}
-			break;
-		case 3:
-			this.state = 0;
-			
-			while (true) {
-				updateModel(System.currentTimeMillis());
-				view.updateView();
-				this.model.getPlayer().setGravitationOn(false);
-				moveMode3(this.state);
-				// ist auf false für Versuche
-				if (false) {
-					timer.pause();
-					break;
-				}
-				timer.pause();
-			}
-			break;
-		}
+				break;
+			case 3:
+				this.state = 0;
 
-		view.gameOverView();
-		this.view.setGame(false);
+				while (true) {
+					updateModel(System.currentTimeMillis());
+					view.updateView();
+					this.model.getPlayer().setGravitationOn(false);
+					moveMode3(this.state);
+					// ist auf false für Versuche
+					if (isGameOver(model.getPlayer(), model.getObstacleList())) {
+						timer.pause();
+						break;
+					}
+					timer.pause();
+				}
+				break;
+			}
+			this.view.removeAll();
+			if (this.view.getMode() != -1) {
+				this.view.setGame(false);
+				this.model.getObstacleList().reset();
+				this.model.reset();
+				this.view.gameOverView();
+			}
+			this.view.requestRestart();
+		}
 	}
 
 	/*
@@ -155,8 +162,6 @@ public class Controller implements Runnable {
 	 */
 	public void moveAllObstaclesUp(int move) {
 		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
-			System.out.println(this.model.getObstacleList().get(i).getY()
-					+ this.model.getObstacleList().get(i).getHeight());
 			if (this.model.getObstacleList().get(i).getY()
 					+ this.model.getObstacleList().get(i).getHeight() < Model.RES_Y) {
 				this.model.getObstacleList().get(i).setMoveUp(move);
@@ -206,7 +211,7 @@ public class Controller implements Runnable {
 		}
 	}
 
-	//moves the player continuously up and down
+	// moves the player continuously up and down
 	public void moveMode3(int state) {
 
 		if (state == 0) {
@@ -230,7 +235,7 @@ public class Controller implements Runnable {
 
 	public void updateModel(long thisTime) {
 		int deltaT = (int) (thisTime - model.getLastTime());
-		model.getPlayer().updateObject(deltaT,1);
+		model.getPlayer().updateObject(deltaT, 1);
 		controlObstacleSpawn();
 		if (model.getObstacleList() != null) {
 			model.getObstacleList().updateAllObstacles(deltaT);
@@ -333,23 +338,6 @@ public class Controller implements Runnable {
 			answer = doOverlap(player, theObstacle);
 		}
 		return answer;
-	}
-
-	// generate random GameOver Text
-	public String gameOverText() {
-		// control text in case if something went wrong
-		String text = "something went terribly wrong";
-		switch (model.getRgen().nextInt(2)) {
-		case 0:
-			text = "Key VigenÃ¨re: gameover\n nie ildwkknoi kvw ftlk ffdiw, huf ls zrauyqh wo xyurayucpp.";
-			break;
-		case 1:
-			text = "his existence was only brief, but he enjoyed it thoroughly";
-			break;
-		default:
-			text = "wrong number";
-		}
-		return text;
 	}
 
 	// verbesserungsvorschlag: diese methode passiert dann, wenn in richtung der

@@ -114,5 +114,17 @@ public class Model {
 	public int getObstacleSpeed() {
 		return obstacleSpeed;
 	}
+	
+	public void reset(){
+
+		this.rgen = new RandomGenerator();
+		this.physics = new Physics(GRAV);
+		this.player = new Rectangle(PLX, PLY, PLW, PLH, 0, 0, 0, 0, physics, Color.YELLOW, DDIS,0);
+		this.lastTime = System.currentTimeMillis();
+		this.obstacleList = new ObstacleList(RES_X);
+		this.obstacleSpeed = OBV0;
+		this.background = new Rectangle(0, 0, 1400, 700, 0, 0, 0, 0, physics, Color.BLUE, 0,0);
+		this.ground = new Rectangle(0, GNDY, 1400, GNDH, 0, 0, 0, 0, physics, Color.GREEN, 0,0);
+	}
 
 }
