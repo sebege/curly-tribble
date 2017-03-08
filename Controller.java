@@ -17,6 +17,7 @@ public class Controller implements Runnable {
 	public void run() {
 		while (true) {
 			enforceGravitation(model.getPlayer());
+			//switch between the diffrent MODI
 			switch (this.view.getMode()) {
 			case 0:
 				while (true) {
@@ -37,7 +38,7 @@ public class Controller implements Runnable {
 					view.updateView();
 					this.model.getPlayer().setGravitationOn(false);
 					moveMode3(this.state);
-					// ist auf false für Versuche
+					// ist auf false fÃ¼r Versuche
 					if (isGameOver(model.getPlayer(), model.getObstacleList())) {
 						timer.pause();
 						break;
@@ -47,6 +48,8 @@ public class Controller implements Runnable {
 				break;
 			}
 			this.view.removeAll();
+			//activates only after a game. At the beginnin mode =
+			//-1
 			if (this.view.getMode() != -1) {
 				this.view.setGame(false);
 				this.model.getObstacleList().reset();
@@ -84,6 +87,7 @@ public class Controller implements Runnable {
 
 	public void moveUp() {
 		switch (this.view.getMode()) {
+				//2 ist dein ASTROIDENspiel
 		case 2:
 			model.getPlayer().setMoveUp(500);
 			model.getPlayer().setGravitationOn(true);
@@ -162,6 +166,7 @@ public class Controller implements Runnable {
 	 */
 	public void moveAllObstaclesUp(int move) {
 		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
+			//not letting the obstacles move above the top
 			if (this.model.getObstacleList().get(i).getY()
 					+ this.model.getObstacleList().get(i).getHeight() < Model.RES_Y) {
 				this.model.getObstacleList().get(i).setMoveUp(move);
@@ -180,6 +185,7 @@ public class Controller implements Runnable {
 	 */
 	public void moveAllObstaclesDown(int move) {
 		for (int i = 0; i < this.model.getObstacleList().size(); i++) {
+			//not letting the obstacles move below the bottom
 			if (this.model.getObstacleList().get(i).getY() > 0) {
 				this.model.getObstacleList().get(i).setMoveDown(move);
 			} else if (this.model.getObstacleList().get(i).getY() <= 0) {
