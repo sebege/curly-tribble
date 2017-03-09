@@ -15,8 +15,10 @@ public class HighResView extends View {
 		addGRects();
 	}
 
+	//after the player lost a game
 	public void requestRestart() {
 		while (getGame() == false) {
+			//diffrence between the beginning of the game and a gameOver
 			if (getMode() == -1) {
 				setLabel(controlText(), 250);
 			} else if (getMode() != -1) {
@@ -26,6 +28,7 @@ public class HighResView extends View {
 		System.out.println("true");
 	}
 
+	//add Label for the gameOverScreen
 	public void gameOverView() {
 		setLabel(onlyGameOverText(), 100);
 		setLabel(gameOverText(), 200);
@@ -70,6 +73,9 @@ public class HighResView extends View {
 		add(grect);
 	}
 
+	/**
+	*return String "GAME OVER"
+	*/
 	public String onlyGameOverText() {
 		return "GAME OVER";
 	}
@@ -91,10 +97,21 @@ public class HighResView extends View {
 		return text;
 	}
 
+	/**
+	*return the String of the controll
+	*/
 	public String controlText() {
 		return "R: Resart\n0: normal\n1: nothing\2: nothing\n3: Obstacles";
 	}
 
+	/**
+	*add GLabels at insertHeight with the font "SansSerif-36"
+	*
+	*@param insertText 
+	*	insert the String for the Label
+	*@param insertHeight
+	*	the position of the Label
+	*/
 	public void setLabel(String insertText, int insertHeight) {
 		String[] halfText = insertText.split("\n");
 		for (int i = 0; i < halfText.length; i++) {
