@@ -10,7 +10,7 @@ public class Spacecraft extends Rectangle {
 	private int movingSpeed;
 	private int jetBoost;
 	public Spacecraft(Model model) {
-		super(200, 300, 100, 50, 0, 0, 0, 0, model, Color.GREEN, 0, 0, 0);
+		super(200, 300, 100, 50, 0, 0, 0, 0, model, new Color(0, 255, 0), 0, 0, 0);
 		this.movingSpeed = 800;
 		this.jetBoost = 3;
 	}

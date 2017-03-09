@@ -12,18 +12,24 @@ public class SpaceController extends Controller {
 	}
 
 	public void run() {
-		Spacecraft ship = model.getSpacecraft();
-		model.setLastUpdate(System.currentTimeMillis());
 		while (true) {
-			updateModel(System.currentTimeMillis());
-			view.updateView();
-			if (isGameOver(ship, model.getObstacleList())) {
+			model.setSpacecraft(new Spacecraft(model));
+			model.setStarList(new StarList(model));
+			Spacecraft ship = model.getSpacecraft();
+			model.getObstacleList().clear();
+			model.setLastUpdate(System.currentTimeMillis());
+			while (true) {
+				updateModel(System.currentTimeMillis());
+				view.updateView();
+				if (isGameOver(ship, model.getObstacleList())) {
+					timer.pause();
+					break;
+				}
 				timer.pause();
-				break;
 			}
-			timer.pause();
+			view.gameOverView();
+			view.pause(3000);
 		}
-		view.gameOverView();
 	}
 
 	/*
@@ -78,14 +84,25 @@ public class SpaceController extends Controller {
 
 	public void updateModel(long thisTime) {
 		int deltaT = (int) (thisTime - model.getLastUpdate());
+		if(model.getSpacecraft().getY() < 0 - model.getSpacecraft().getHeight()) {
+			model.getSpacecraft().setY(0 - model.getSpacecraft().getHeight());
+			model.getSpacecraft().setVy(0);
+		}
+		if(model.getSpacecraft().getY() > model.getResY()) {
+			model.getSpacecraft().setY(model.getResY());
+			model.getSpacecraft().setVy(0);
+		}
 		model.getObstacleList().removeOldObstacles();
 		// clear and fill the stuffList
 		model.getStuff().clear();
-		model.getStuff().add(model.getSpace());			
-		model.getStuff().add(model.getSpacecraft());
+		model.getStuff().add(model.getSpace());
+		for (int i = 0; i < model.getStarList().size(); i++) {
+			model.getStuff().add(model.getStarList().get(i));
+		}
 		for (int i = 0; i < model.getObstacleList().size(); i++) {
 			model.getStuff().add(model.getObstacleList().get(i));
 		}
+		model.getStuff().add(model.getSpacecraft());
 		model.getStuff().updateAllRectangles(deltaT);
 		controlObstacleSpawn();
 		model.setLastUpdate(thisTime);
@@ -118,7 +135,7 @@ public class SpaceController extends Controller {
 	 * adds a new asteroid to the obstacle list every 300 pixel
 	 */
 	public void controlObstacleSpawn() {
-		if (model.getObstacleList().getDistance() > 300) {
+		if (model.getObstacleList().getDistance() > 250) {
 			model.getObstacleList().add(new Asteroid(model));
 
 		}

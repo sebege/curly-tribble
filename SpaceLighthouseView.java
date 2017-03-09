@@ -47,21 +47,50 @@ public class SpaceLighthouseView extends SpaceView {
 		}
 	}
 
+	public void gameOverView() {
+		// get the spacecraft into a more convenient variable
+		Rectangle ship = model.getStuff().get(model.getStuff().size()-1);
+		insertRectangle(new Rectangle(ship.getX() - 50, ship.getY() - 50, ship.getWidth() + 100, ship.getHeight() + 100,
+				0, 0, 0, 0, model, Color.ORANGE, 0, 0, 0));
+		insertRectangle(new Rectangle(ship.getX(), ship.getY(), ship.getWidth(), ship.getHeight(), 0, 0, 0, 0, model,
+				Color.RED, 0, 0, 0));
+		try {
+			this.getNet().send(this.getbArray());
+		} catch (IOException e) {
+			System.out.println("go get some coffee and fix this.");
+		}
+		pause(1000);
+	}
+
 	/**
 	 * constructs the Byte Array that is to be sent to the lighthouse
 	 */
 	public void updateByteArray() {
+		// calls the insert rectangle method for every square that is supposed
+		// to be displayed
 		for (int i = 0; i < model.getStuff().size(); i++) {
 			insertRectangle(model.getStuff().get(i));
 		}
 	}
 
-	// needs proper comments
+	/**
+	 * takes a rectangle scales its coordinates and extension down to the low
+	 * res view, therefore dividing it into low res pixels and then fils the
+	 * appropiate bytes in the byte array with the color of the rectangle. also
+	 * inserts the rectangle into the high res canvas.
+	 * 
+	 * @param rec
+	 */
 	public void insertRectangle(Rectangle rec) {
+		// compute y coordinate. intern origin is at the lower left corner, so
+		// it has to be inverted
 		int y = (this.lResY - 1) - (rec.getY() / 50);
+		// if the original y isn't exactly at the border of an low res square,
+		// then adjust for it by rounding up or down
 		if (rec.getY() % 50 > 25) {
 			y -= 1;
 		}
+		// same for x and the height and the width
 		int x = rec.getX() / 50;
 		if (rec.getX() % 50 > 25) {
 			x += 1;
@@ -75,22 +104,29 @@ public class SpaceLighthouseView extends SpaceView {
 			height += 1;
 		}
 		int i;
+		// a nested widht*height loop. one iteration for every square
 		for (int l = 0; l < width; l++) {
 			for (int m = 0; m < height; m++) {
 				if (0 <= x + l && x + l < lResX) {
+					// the windows are numerated. this formula aims at the right
+					// window
 					i = (y - m) * this.lResX + (x + l);
 					fillWindow(rec.getColor(), i);
-					addGSquare(rec.getColor(), x+l, y-m);
+					// addGSquare(rec.getColor(), x+l, y-m);
 				}
 			}
 		}
-	}
-
-	public void insertObstacles() {
-		ObstacleList list = model.getObstacleList();
-		for (int i = 0; i < list.size(); i++) {
-			insertRectangle(list.get(i));
+		// you can't play this game properly in the pixel view, because then you
+		// can't control the acceleration, so here the code for the high res
+		// view for the client.
+		// adds the grect also to the canvas
+		GRect grect = new GRect(rec.getX(), model.getResY() - rec.getY() - rec.getHeight(), rec.getWidth(),
+				rec.getHeight());
+		if (rec.getColor() != null) {
+			grect.setColor(rec.getColor());
+			grect.setFilled(true);
 		}
+		add(grect);
 	}
 
 	/**
@@ -101,18 +137,27 @@ public class SpaceLighthouseView extends SpaceView {
 	 * @param i
 	 */
 	public void fillWindow(Color color, int i) {
+		// ignore method, if there is no ith window
 		if (i < 392 && 0 <= i) {
 			this.getbArray()[i * 3] = (byte) color.getRed();
 			this.getbArray()[1 + i * 3] = (byte) color.getGreen();
 			this.getbArray()[2 + i * 3] = (byte) color.getBlue();
 		}
 	}
-	
+
+	/**
+	 * takes downscaled coordinates to scale them up again to put a square at
+	 * the resulting coordinate onto the canvas
+	 * 
+	 * @param color
+	 * @param x
+	 * @param y
+	 */
 	public void addGSquare(Color color, int x, int y) {
 		GRect grect = new GRect(x * 50, y * 50, 50, 50);
-			grect.setColor(color);
-			grect.setFilled(true);
-			add(grect);
+		grect.setColor(color);
+		grect.setFilled(true);
+		add(grect);
 	}
 
 	/*
