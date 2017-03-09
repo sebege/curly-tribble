@@ -115,6 +115,9 @@ public class Model {
 		return obstacleSpeed;
 	}
 	
+	/**
+	*reset the state of the objects
+	*/
 	public void reset(){
 
 		this.rgen = new RandomGenerator();
