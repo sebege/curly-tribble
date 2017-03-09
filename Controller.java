@@ -53,7 +53,6 @@ public class Controller implements Runnable {
 			if (this.view.getMode() != -1) {
 				this.view.setGame(false);
 				this.model.getObstacleList().reset();
-				this.model.reset();
 				this.view.gameOverView();
 			}
 			this.view.requestRestart();
