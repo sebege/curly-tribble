@@ -25,7 +25,7 @@ public class HighResView extends View {
 				setLabel(controlText(), 400);
 			}
 		}
-		System.out.println("true");
+		this.model.reset();
 	}
 
 	//add Label for the gameOverScreen
